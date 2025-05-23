@@ -1,0 +1,1358 @@
+
+xeryon_xla_5_eds Documentation
+- 05-23-2025 - 03:29PM -
+
+
+Xeryon XLA-5 INTG Linear Piezo Actuator
+
+- - - - - - - - Object Description - - - - - - - - - -
+-------------------------------------------------------
+
+============ Line 0 ============
+
+Summary of line 0:
+---------------------------------------------------------------------------
+1000	Device Type
+1001	Error Register
+1002	Manufacturer Status Register
+1005	COB-ID SYNC
+1010	Store Parameter Field
+1011	Restore Default Parameters
+1014	COB-ID EMCY
+1017	Producer Heartbeat Time
+1018	Identity Object
+1200	Server SDO Parameter 1
+1400	Receive PDO Communication Parameter 1
+1402	Receive PDO Communication Parameter 3
+1600	Receive PDO Mapping Parameter 1
+1602	Receive PDO Mapping Parameter 3
+1800	Transmit PDO Communication Parameter 1
+1802	Transmit PDO Communication Parameter 3
+1A00	Transmit PDO Mapping Parameter 1
+1A02	Transmit PDO Mapping Parameter 3
+2000	Motor frequency bounds
+2002	Motor phase bounds
+2004	Motor duty cycle bounds
+2010	Period noiseshaping config
+2011	Filter speed input
+2012	Hybrid control switch point
+2013	Homing parameters
+2014	Halt Velocity Window
+2015	Halt Velocity Timeout
+3000	I/O Override Enable
+3001	I/O Override settings
+4000	I/O Configuration
+4001	LED Configuration
+5000	Status logging verbosity flags
+5001	UART status logging interval
+5002	Debug control flags
+5003	Trace Buffer
+5004	Firmware ID
+6040	Controlword 
+6041	Statusword 
+605A	Quick stop option code
+605B	Shutdown option code
+605C	Disable operation option code
+605D	Halt option code
+605E	Fault reaction option code
+6060	Mode of operation
+6061	Mode of operation display
+6062	Position demand value
+6063	Position actual internal value
+6064	Position Actual Value
+6065	Following error window
+6066	Following error time out
+6067	Position window
+6068	Position window time
+607A	Target Position
+607C	Home offset
+607D	Software position limit
+607F	Max profile velocity
+6081	Profile velocity
+6083	Profile acceleration
+6085	Quick stop deceleration
+6098	Homing method
+6099	Homing speeds
+609A	Homing acceleration
+60A4	Profile jerk
+60C5	Max acceleration
+60E3	Supported homing methods
+60F4	Following error actual value
+60FC	Position demand internal value
+6502	Supported Drive Modes
+
+
+Communication Segment
+
+
+Variable - 1000 - Device Type:
+---------------------------------------------------------------------------
+The device type specifies the kind of device. The lower 16 bit contain the device profile number and the upper 16 bit an additional information.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x420192   0x0        0xFFFFFFFF 	u32	CONST	0
+
+
+
+Variable - 1001 - Error Register:
+---------------------------------------------------------------------------
+The error register is a field of 8 bits, each for a certain error type. If an error occurs the bit has to be set.
+
+    Bit Meaning
+    0  generic error
+    1  current
+    2  voltage
+    3  temperature
+    4  communication error (overrun, error state)
+    5  device profile specific
+    6  reserved
+    7  manufacturer specific
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFF       	u8	RO	0
+
+
+
+Variable - 1002 - Manufacturer Status Register:
+---------------------------------------------------------------------------
+This object is a common status register for 
+    manufacturer specific purposes.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RO	0
+
+
+
+Variable - 1005 - COB-ID SYNC:
+---------------------------------------------------------------------------
+COB-ID of the Synchronization object.
+    The device generates a SYNC message if bit 30 is set.
+    The meaning of other bits is equal to the other communication objects.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x80000080 0x80       0xFFFFFFFF 	u32	RW	0
+
+
+
+Array - 1010 - Store Parameter Field:
+---------------------------------------------------------------------------
+This entry supports saving of parameters in non volatile memory.
+    With a read access the device provides information about
+    its saving capabilities. Several parameter groups are distinguished.
+
+    Sub index 1      : all parameters
+    Sub index 2      : communication parameters
+    Sub index 3      : application parameters
+    Sub index 4 - 127: manufacturer defined parameters
+
+    For saving the signature "save" (0x65766173) must be written.
+    The CANopen Library by port contains an extensions for clear ("kill").
+1010:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x5        0x0        0x7F       	u8	CONST	0
+
+1010:001 Save all Parameters
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RW	0
+
+1010:002 Save Communication Parameters
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RW	0
+
+1010:003 Save Application Parameters
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RW	0
+
+1010:004 Manufacturer specific Entry
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RW	0
+
+1010:005 Manufacturer specific Entry
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RW	0
+
+
+
+Array - 1011 - Restore Default Parameters:
+---------------------------------------------------------------------------
+This entry supports restoring of default para- meters.
+    With a read access the device provides information about
+    its capabilities to restore these values.
+    Several parameter groups are distinguished.
+
+    Sub index 1      : all parameters
+    Sub index 2      : communication parameters
+    Sub index 3      : application parameters
+    Sub index 4 - 127: manufacturer defined parameters
+
+    For restoring the signature "load" (0x64616f6c) must be written.
+1011:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x3        0x0        0x7F       	u8	CONST	0
+
+1011:001 Restore all Default Parameters
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RW	0
+
+1011:002 Restore Communication Default Parameters
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RW	0
+
+1011:003 Restore Application Default Parameters
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RW	0
+
+
+
+Variable - 1014 - COB-ID EMCY:
+---------------------------------------------------------------------------
+COB-ID used for emergency message (Emergency Producer).
+Value      Min         Max         Unit	Type	Access	Mapping
+0x80       0x80       0xBFFFFFFF 	u32	RO	0
+
+
+
+Variable - 1017 - Producer Heartbeat Time:
+---------------------------------------------------------------------------
+The producer heartbeat time defines the cycle time of the heartbeat. If the time is 0 it is not used. The time has to be a multiple of 1 ms.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFF     ms	u16	RW	0
+
+
+
+Record - 1018 - Identity Object:
+---------------------------------------------------------------------------
+This object contains general information about the
+    device.
+    Sub-Index 1 contains a unique value allocated each manufacturer.
+    Sub-Index 2 identifies the manufacturer specific product code (device version).
+    Sub-Index 3 contains the revision number.
+    Bit 31-16 is the major revision number and Bit 15-0 the minor revision number.
+    Sub-Index 4 identifies a manufacturer specific serial number.
+1018:000 number of entries
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x4        0x1        0x4        	u8	RO	0
+
+1018:001 Vendor Id
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x5A4      0x0        0xFFFFFFFF 	u32	RO	0
+
+1018:002 Product Code
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0xC1088B3  0x0        0xFFFFFFFF 	u32	RO	0
+
+1018:003 Revision number
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x1        0x0        0xFFFFFFFF 	u32	RO	0
+
+1018:004 Serial number
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x12345678 0x0        0xFFFFFFFF 	u32	RO	0
+
+
+
+Record - 1200 - Server SDO Parameter 1:
+---------------------------------------------------------------------------
+The object contains the parameters for the SDOs for which
+    the device is the server.
+1200:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x2        0x2        0x2        	u8	RO	0
+
+1200:001 COB-ID Client -> Server
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x600      0x600      0xBFFFFFFF 	u32	RO	0
+
+1200:002 COB-ID Server -> Client
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x580      0x580      0xBFFFFFFF 	u32	RO	0
+
+
+
+Record - 1400 - Receive PDO Communication Parameter 1:
+---------------------------------------------------------------------------
+It contains the communication parameters of the current PDO
+    the device is able to receive.
+    Sub-index 0 contains the number of PDO-parameters implemented.
+    Sub index 1 describes the COB-ID. If bit 31 is set the PDO is disabled.
+    The  transmission mode is defined by sub-index 2.
+    An inhibit time can be defined on sub-index 3 in 100 us.
+    At the 5th sub-index can be defined a event time for asynchron pdos.
+1400:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x2        0x2        0x5        	u8	RO	0
+
+1400:001 COB-ID
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x200      0x80       0xFFFFFFFF 	u32	RW	0
+
+1400:002 Transmission Type
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0xFF       0x0        0xFF       	u8	RW	0
+
+
+
+Record - 1402 - Receive PDO Communication Parameter 3:
+---------------------------------------------------------------------------
+It contains the communication parameters of the current PDO
+    the device is able to receive.
+    Sub-index 0 contains the number of PDO-parameters implemented.
+    Sub index 1 describes the COB-ID. If bit 31 is set the PDO is disabled.
+    The  transmission mode is defined by sub-index 2.
+    An inhibit time can be defined on sub-index 3 in 100 us.
+    At the 5th sub-index can be defined a event time for asynchron pdos.
+1402:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x2        0x2        0x5        	u8	CONST	0
+
+1402:001 COB-ID
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x400      0x80       0xFFFFFFFF 	u32	RW	0
+
+1402:002 Transmission Type
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0xFF       0x0        0xFF       	u8	RW	0
+
+
+
+Record - 1600 - Receive PDO Mapping Parameter 1:
+---------------------------------------------------------------------------
+The sub-indices contain the indices, the sub-indices and the
+    lengths of the mapped sub-indices.
+
+    Their structure is as follows:
+    index (16bit)   sub-index (8bit)   length (8bit)
+1600:000 Number of mapped objects
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x1        0x0        0xFF       	u8	CONST	0
+
+1600:001 Mapping Entry 1
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x60400010 0x0        0xFFFFFFFF 	u32	CONST	0
+
+
+
+Record - 1602 - Receive PDO Mapping Parameter 3:
+---------------------------------------------------------------------------
+The sub-indices contain the indices, the sub-indices and the
+    lengths of the mapped sub-indices.
+
+    Their structure is as follows:
+    index (16bit)   sub-index (8bit)   length (8bit)
+1602:000 Number of mapped objects
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x2        0x0        0xFF       	u8	CONST	0
+
+1602:001 Mapping Entry 1
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x60400010 0x0        0xFFFFFFFF 	u32	CONST	0
+
+1602:002 Mapping Entry 2
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x607A0020 0x0        0xFFFFFFFF 	u32	CONST	0
+
+
+
+Record - 1800 - Transmit PDO Communication Parameter 1:
+---------------------------------------------------------------------------
+It contains the communication parameters of the current PDO
+    the device is able to transmit.
+    Sub-index 0 contains the number of PDO-parameters implemented.
+    Sub index 1 describes the COB-ID. If bit 31 is set the PDO is disabled.
+    The transmission mode is defined by sub-index 2.
+    An inhibit time can be defined on sub-index 3 in 100 us.
+    At the 5th sub-index can be defined a event time for asynchron pdos.
+1800:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x5        0x2        0x6        	u8	RO	0
+
+1800:001 COB-ID
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x40000180 0x80       0xFFFFFFFF 	u32	RW	0
+
+1800:002 Transmission Type
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0xFF       0x0        0xFF       	u8	RW	0
+
+1800:003 Inhibit Time
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFF     100 us	u16	RW	0
+
+1800:004 Compatibility Entry
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFF       	u8	RW	0
+
+1800:005 Event Timer
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFF     ms	u16	RW	0
+
+
+
+Record - 1802 - Transmit PDO Communication Parameter 3:
+---------------------------------------------------------------------------
+It contains the communication parameters of the current PDO
+    the device is able to transmit.
+    Sub-index 0 contains the number of PDO-parameters implemented.
+    Sub index 1 describes the COB-ID. If bit 31 is set the PDO is disabled.
+    The transmission mode is defined by sub-index 2.
+    An inhibit time can be defined on sub-index 3 in 100 us.
+    At the 5th sub-index can be defined a event time for asynchron pdos.
+1802:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x5        0x2        0x6        	u8	CONST	0
+
+1802:001 COB-ID
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x40000380 0x80       0xFFFFFFFF 	u32	RW	0
+
+1802:002 Transmission Type
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0xFF       0x0        0xFF       	u8	RW	0
+
+1802:003 Inhibit Time
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFF     100 us	u16	RW	0
+
+1802:004 Compatibility Entry
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFF       	u8	RW	0
+
+1802:005 Event Timer
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFF     ms	u16	RW	0
+
+
+
+Record - 1A00 - Transmit PDO Mapping Parameter 1:
+---------------------------------------------------------------------------
+Contains the mapping for the PDOs the device is able to transmit.
+    The type of the PDO mapping parameter is at index 21h.
+    The subindex 0h contains the number of valid entires within the mapping record.
+    This number of entries is also the number of the application variables
+    which shall be transmitted with the corresponding PDO.
+    The subindicex from 1h to number of entries contain the information
+    about the mapped application variables.
+    These entries describe the PDO contents by their index, subindex and length.
+    Allthree values are hexa-decimal coded.
+    The length entry contains the length of the object in bits (1..40h).
+    This parameter can be used to verify the overall mapping length. It is mandatory.
+1A00:000 Number of mapped objects
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x1        0x0        0xFF       	u8	CONST	0
+
+1A00:001 Mapping Entry 1
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x60410010 0x0        0xFFFFFFFF 	u32	CONST	0
+
+
+
+Record - 1A02 - Transmit PDO Mapping Parameter 3:
+---------------------------------------------------------------------------
+Contains the mapping for the PDOs the device is able to transmit.
+    The type of the PDO mapping parameter is at index 21h.
+    The subindex 0h contains the number of valid entires within the mapping record.
+    This number of entries is also the number of the application variables
+    which shall be transmitted with the corresponding PDO.
+    The subindicex from 1h to number of entries contain the information
+    about the mapped application variables.
+    These entries describe the PDO contents by their index, subindex and length.
+    Allthree values are hexa-decimal coded.
+    The length entry contains the length of the object in bits (1..40h).
+    This parameter can be used to verify the overall mapping length. It is mandatory.
+1A02:000 Number of mapped objects
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x2        0x0        0xFF       	u8	CONST	0
+
+1A02:001 Mapping Entry 1
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x60410010 0x0        0xFFFFFFFF 	u32	CONST	0
+
+1A02:002 Mapping Entry 2
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x60640020 0x0        0xFFFFFFFF 	u32	CONST	0
+
+
+Manufacturer Segment
+
+
+Record - 2000 - Motor frequency bounds:
+---------------------------------------------------------------------------
+Motor oscillation frequency setting
+2000:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x3        0x0        0xFF       	u8	CONST	0
+
+2000:001 Minimum
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x14C08    0x0        0x30D40    	i32	RW	0
+
+2000:002 Nominal
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x14C08    0x0        0x30D40    	i32	RW	0
+
+2000:003 Maximum
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x14C08    0x0        0x30D40    	i32	RW	0
+
+
+
+Record - 2002 - Motor phase bounds:
+---------------------------------------------------------------------------
+
+2002:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x3        0x0        0xFF       	u8	CONST	0
+
+2002:001 Minimum
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x5A       0x0        0xB4       	i32	RW	0
+
+2002:002 Nominal
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x5A       0x0        0xB4       	i32	RW	0
+
+2002:003 Maximum
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x5A       0x0        0xB4       	i32	RW	0
+
+
+
+Record - 2004 - Motor duty cycle bounds:
+---------------------------------------------------------------------------
+
+2004:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x3        0x0        0xFF       	u8	CONST	0
+
+2004:001 Minimum
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x32       	i32	RW	0
+
+2004:002 Nominal
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x32       0x0        0x32       	i32	RW	0
+
+2004:003 Maximum
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x32       0x0        0x32       	i32	RW	0
+
+
+
+Variable - 2010 - Period noiseshaping config:
+---------------------------------------------------------------------------
+If the desired oscillation period cannot be represented as an integer
+fraction of the timer period, noise shaping can be used to make the
+average period equal to the desired period.
+
+0 = no noiseshaping
+1 = 1st order noiseshaping
+2 = 2nd order noiseshaping
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x2        	u8	RW	0
+
+
+
+Variable - 2011 - Filter speed input:
+---------------------------------------------------------------------------
+Apply filtering to the speed input
+
+0: no filtering
+1: 1st order IIR filter with cutoff at 50Hz
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x1        	u8	RW	0
+
+
+
+Variable - 2012 - Hybrid control switch point:
+---------------------------------------------------------------------------
+In open-loop mode a hybrid control strategy is used.
+
+If the SPEED input is below cod_control_switch_point, the duty
+cycle will remain fixed to cod_dcycle.min and the phase will be
+changed between cod_phase.max and cod_phase.min (for
+decreasing SPEED).
+
+If the SPEED input is equal to or above cod_control_switch_point,
+the phase will be kept at cod_phase.max and the duty cycle will be
+scaled from cod_dcycle.min to cod_dcycle.max (for increasing SPEED)
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x28       0x0        0x64       	u32	RW	0
+
+
+
+Record - 2013 - Homing parameters:
+---------------------------------------------------------------------------
+Parameters to control homing algorithm behavior
+2013:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x3        0x0        0xFF       	u8	CONST	0
+
+2013:001 Step
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x437A0000 0x0        0x7F7FFFFF 	r32	RW	0
+
+2013:002 Standstill Tolerance
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x2        0x0        0xFFFFFFFF 	u32	RW	0
+
+2013:003 Reverse Trigger
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x64       0x0        0xFFFFFFFF ms	u32	RW	0
+
+
+
+Variable - 2014 - Halt Velocity Window:
+---------------------------------------------------------------------------
+Window in which the position needs to remain for halt-mode standstil to be triggered
+Value      Min         Max         Unit	Type	Access	Mapping
+0x1        0x0        0xFFFF     	u16	RW	0
+
+
+
+Variable - 2015 - Halt Velocity Timeout:
+---------------------------------------------------------------------------
+Time the position needs to be constant before the velocity is considered 0 in halt mode.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x1        0x0        0xFFFF     ms	u16	RW	0
+
+
+
+Variable - 3000 - I/O Override Enable:
+---------------------------------------------------------------------------
+Bitmap to apply overrides with to OD values.
+bit 0 => enable 0x3001/0 [=> enable]
+bit 1 => enable 0x3001/1 [=> direction]
+bit 2 => enable 0x3001/2 [=> speed]
+bit 3 => enable 0x3001/3 [=> home]
+...
+
+(keep in sync with Override Settings 0x3001)
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RW	0
+
+
+
+Record - 3001 - I/O Override settings:
+---------------------------------------------------------------------------
+Values to use when overriding parameters using the OVERRIDE_ENABLE register
+3001:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x5        0x0        0xFF       	u8	CONST	0
+
+3001:001 Enable
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x1        	u8	RW	0
+
+3001:002 Direction
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x1        	u8	RW	0
+
+3001:003 Speed
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0xFF7FFFFF 0x7F7FFFFF 	r32	RW	0
+
+3001:004 Home
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x1        	u8	RW	0
+
+3001:005 Trigger
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x1        	u8	RW	0
+
+
+
+Record - 4000 - I/O Configuration:
+---------------------------------------------------------------------------
+AI / speed input pin config:
+  0: off
+  1: PWM
+  2: Analog
+
+DI1:
+  0: off
+  1: trigger  [TODO]
+  2: pulse  [TODO]
+  3: encoder A signal  [TODO]
+
+DI2:
+  0: off
+  1: direction
+  2: encoder B signal  [TODO]
+
+DI3:
+  0: off
+  1: enable  [TODO]
+
+DI4:
+  0: off
+  1: find_index / home
+
+DO1:
+  0: off
+  1: LIM_NEG  [TODO]
+  2: softlim_neg  [TODO]
+  3: encoder A signal  [TODO]
+  4: pos_reached  [TODO]
+
+DO2:
+  0: off
+  1: LIM_POS  [TODO]
+  2: softlim_pos  [TODO]
+  3: encoder B signal  [TODO]
+  4: index_found  [TODO]
+
+DO3:
+  0: off
+  1: trig_out  [TODO]
+  2: Encoder I signal [TODO]
+
+DO4:
+  0: off [TODO]
+  1: error
+
+STO:
+  0: only hardware
+  1: software response enabled [TODO]
+
+4000:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0xA        0x0        0xFF       	u8	CONST	0
+
+4000:001 AI1 / speed pin config
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x2        	u8	RW	0
+
+4000:002 DI1 config
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x3        	u8	RW	0
+
+4000:003 DI2 config
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x2        	u8	RW	0
+
+4000:004 DI3 config
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x1        	u8	RW	0
+
+4000:005 DI4 config
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x1        	u8	RW	0
+
+4000:006 DO1 config
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x4        	u8	RW	0
+
+4000:007 DO2 config
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x4        	u8	RW	0
+
+4000:008 DO3 config
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x2        	u8	RW	0
+
+4000:009 DO4 config
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x1        0x0        0x1        	u8	RW	0
+
+4000:010 STO config
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0x1        	u8	RW	0
+
+
+
+Variable - 4001 - LED Configuration:
+---------------------------------------------------------------------------
+LED configuration bitfield.
+Set relevant bit to 1 to enable the LED, or 0 to disable the LED.
+
+Bits:
+0: POWER LED
+1: ERROR LED
+2: MOTOR LED
+
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x7        0x0        0x7        	u8	RW	0
+
+
+
+Variable - 5000 - Status logging verbosity flags:
+---------------------------------------------------------------------------
+Bitfield to enable/disable periodic logging of status
+
+0: IO status
+1: PMU status
+2: EEPROM status
+3: control loop parameters
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0xFFFFFFFF 0x0        0xFFFFFFFF 	u32	RW	0
+
+
+
+Variable - 5001 - UART status logging interval:
+---------------------------------------------------------------------------
+Number of ticks between each UART status print in milliseconds.
+
+Set to 0 to disable log printing.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x3E8      0x0        0xF4240    ms	u32	RW	0
+
+
+
+Variable - 5002 - Debug control flags:
+---------------------------------------------------------------------------
+Various debug flags
+
+0: reset motion loop statistics
+1: reset control loop statistics
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RW	0
+
+
+
+Record - 5003 - Trace Buffer:
+---------------------------------------------------------------------------
+
+5003:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x5        0x0        0xFF       	u8	CONST	0
+
+5003:001 Address Request
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RW	0
+
+5003:002 Current Address
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RO	0
+
+5003:003 Value
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RO	0
+
+5003:004 Write pointer
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RO	0
+
+5003:005 Control Flags
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RW	0
+
+
+
+Variable - 5004 - Firmware ID:
+---------------------------------------------------------------------------
+Unique ID for the firmware build
+Value      Min         Max         Unit	Type	Access	Mapping
+                                 	vstr	RO	0
+
+
+Device Profile Segment
+
+
+Variable - 6040 - Controlword :
+---------------------------------------------------------------------------
+This object is used to control the CiA-402 FSA, CiA-402 modes and manufacturer-specific entities.
+
+This object is organized bit-wise. The bits have the following meaning:
+    bit 0: switch on
+    bit 1: enable voltage
+    bit 2: quick stop
+    bit 3: enable operation
+    bit 4-6: mode-specific
+    bit 7: fault reset
+    bit 8: halt
+    bit 9: mode-specific
+    bit 10: reserved
+    bit 11-15: manufacturer-specific
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFF     	u16	RW	1
+
+
+
+Variable - 6041 - Statusword :
+---------------------------------------------------------------------------
+This object is used to indicate the current state of the FSA, the operation mode and manufacturer-specific entities.
+
+This object is organized bit-wise. The bits have the following meaning:
+    bit 0: ready to switch on
+    bit 1: switched on
+    bit 2: operation enabled
+    bit 3: fault
+    bit 4: voltage enabled
+    bit 5: quick stop
+    bit 6: switch on disabled
+    bit 7: warning
+    bit 8: manufacturer-specific
+    bit 9: remote
+    bit 10: target reached
+    bit 11: internal limit active
+    bit 12-13: mode-specific
+    bit 14-15: manufacturer-specific
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFF     	u16	RO	1
+
+
+
+Variable - 605A - Quick stop option code:
+---------------------------------------------------------------------------
+This object indicates what action is performed when the quick stop function is executed. The slow down ramp is the deceleration value of the used mode of operation.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x8000     0x7FFF     	i16	RO	0
+
+
+
+Variable - 605B - Shutdown option code:
+---------------------------------------------------------------------------
+This object indicates what action is performed if there is a transition from operation enabled
+state to ready to switch on state. The slow down ramp is the deceleration valu e of the used
+mode of operation.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x8000     0x7FFF     	i16	RO	0
+
+
+
+Variable - 605C - Disable operation option code:
+---------------------------------------------------------------------------
+This object indicates what action is performed if there is a transition from operation enabled
+state to switched on state. The slow down ramp is the deceleration value of the used mode of
+operation.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x8000     0x7FFF     	i16	RO	0
+
+
+
+Variable - 605D - Halt option code:
+---------------------------------------------------------------------------
+This object indicates what action is performed when the halt function is executed. The slow
+down ramp is the deceleration value of the used mode of operation.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x2        0x8000     0x7FFF     	i16	RO	0
+
+
+
+Variable - 605E - Fault reaction option code:
+---------------------------------------------------------------------------
+This object indicates what action is performed when fault is detected in the PDS. The slow down
+ramp is the deceleration value of the used mode of operation.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x8000     0x7FFF     	i16	RO	0
+
+
+
+Variable - 6060 - Mode of operation:
+---------------------------------------------------------------------------
+This object indicates the requested operation mode. If mode of operation is changed, the
+behavior of the drive is manufacturer-specific.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x80       0x7F       	i8	RW	0
+
+
+
+Variable - 6061 - Mode of operation display:
+---------------------------------------------------------------------------
+This object provides the actual operation mode. The behavior of the drive-in mode of operation
+0 is not defined and is manufacturer-specific.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x80       0x7F       	i8	RO	0
+
+
+
+Variable - 6062 - Position demand value:
+---------------------------------------------------------------------------
+This object provides the demanded position value. The value shall be given in user-defined
+position units.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x80000000 0x7FFFFFFF user-defined position units	i32	RO	0
+
+
+
+Variable - 6063 - Position actual internal value:
+---------------------------------------------------------------------------
+This object provides the actual value of the position measurement device.
+The value shall be given in internal units.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x80000000 0x7FFFFFFF internal units	i32	RO	0
+
+
+
+Variable - 6064 - Position Actual Value:
+---------------------------------------------------------------------------
+This object provides the actual value of the position measurement device.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x80000000 0x7FFFFFFF user-definied position	i32	RO	1
+
+
+
+Variable - 6065 - Following error window:
+---------------------------------------------------------------------------
+This object indicates the configured range of tolerated position values symmetrically to the
+position demand value. If the position actual value is out of the following error window, a
+following error occurs. A following error may occur when a drive is blocked, unreachable pro file
+velocity occurs, or at wrong closed-loop coefficients. The value shall be given in user -defined
+position units. If the value of the following error window is FFFF FFFF , the following control
+hshall be switched off.
+Value      Min         Max         Unit	Type	Access	Mapping
+0xFFFFFFFF 0x0        0xFFFFFFFF user-defined position units	u32	RW	0
+
+
+
+Variable - 6066 - Following error time out:
+---------------------------------------------------------------------------
+This object indicates the configured time for a following error condition, after that the bit 13 of
+the statusword shall be set to 1. The reaction of the drive when a following error occurs is
+manufacturer-specific. The value shall be given in ms.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFF     ms	u16	RW	0
+
+
+
+Variable - 6067 - Position window:
+---------------------------------------------------------------------------
+This object indicates the configured symmetrical range of accepted positions relative to the
+target position. If the actual value of the position encoder is within the position window, this
+target position shall be regarded as having been reached. As the user mostly prefers to specify
+the position window in his application in user-defined units, the value is transformed into
+increments. The target position shall be handled in the same manner as in the trajectory
+generator concerning limiting functions and transformation into internal machine units before it
+may be used with this function. The value shall be given in user -defined position units. If the
+value of the position window is FFFF FFFF h , the position window control shall be switched off.
+Value      Min         Max         Unit	Type	Access	Mapping
+0xFFFFFFFF 0x0        0xFFFFFFFF user-defined position units	u32	RW	0
+
+
+
+Variable - 6068 - Position window time:
+---------------------------------------------------------------------------
+This object indicates the configured time, during which the actual position within the position
+window is measured. The value shall be given in ms.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFF     ms	u16	RW	0
+
+
+
+Variable - 607A - Target Position:
+---------------------------------------------------------------------------
+This object indicates the commanded position that the drive should move to in position profile mode or cyclic synchronous position mode. The value of this object can be interpreted as absolute or relative depending on bit 6 of the controlword. It shall be given in user -defined position units and shall be converted to position increments.
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x80000000 0x7FFFFFFF user-defined position	i32	RW	1
+
+
+
+Variable - 607C - Home offset:
+---------------------------------------------------------------------------
+This object indicates the configured difference between the zero position for the application and
+the machine home position (found during homing). If the home position is found, the position
+actual value (object 6064 h ) is equal to the home offset (object 607C h ). If this object is not
+implemented, then the home offset shall be regarded as zero. The value of this object shall be
+given in user-defined position units. Negative values indicate the opposite direction. The
+activation of a new value of the object home offset is manufacturer-specific. It is recommended
+to apply the new value only while the drive is in homing mode.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x80000000 0x7FFFFFFF 	i32	RW	0
+
+
+
+Array - 607D - Software position limit:
+---------------------------------------------------------------------------
+This object indicates the configured maximal and minimal software position limits. These
+parameters shall define the absolute position limits for the position demand value and the
+position actual value. Every new target position shall be checked against these limits.
+To disable the software position limits, the min position limit (sub-index 01 ) and max position
+hlimit (sub-index 02h) shall be set to 0. The limit positions shall be given in user-defined position
+units (same as target position). Supervision of software position limits requires a defined home
+position.
+607D:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x2        0x0        0xFF       	u8	CONST	0
+
+607D:001 Min position limit
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x80000000 0x7FFFFFFF 	i32	RW	0
+
+607D:002 Max position limit
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x80000000 0x7FFFFFFF 	i32	RW	0
+
+
+
+Variable - 607F - Max profile velocity:
+---------------------------------------------------------------------------
+This object indicates the configured maximal allowed velocity in either direction during a profiled
+motion. The value shall be given in the very same physical unit as the profile velocity object
+(6081h ).
+Value      Min         Max         Unit	Type	Access	Mapping
+0x30D40    0x0        0xFFFFFFFF 	u32	RW	0
+
+
+
+Variable - 6081 - Profile velocity:
+---------------------------------------------------------------------------
+This object indicates the configured velocity normally attained at the end of the acceleration
+ramp during a profiled motion and shall be valid for both directions of motion. The value shall
+be given in user-defined velocity units. The velocity units can depend on the user -defined
+position units (position units per second).
+Value      Min         Max         Unit	Type	Access	Mapping
+0x30D40    0x0        0xFFFFFFFF 	u32	RW	0
+
+
+
+Variable - 6083 - Profile acceleration:
+---------------------------------------------------------------------------
+This object indicates the configured acceleration. The value shall be given in user -defined
+acceleration units.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x2DC6C0   0x0        0xFFFFFFFF 	u32	RW	0
+
+
+
+Variable - 6085 - Quick stop deceleration:
+---------------------------------------------------------------------------
+This object indicates the configured deceleration used to stop the motor when the quick stop
+function is activated and the quick stop code object (605A ) is set to 2 or 6. The quick stop
+hdeceleration is also used if the fault reaction code object (605E ) is 2 and the halt option code
+hobject (605D ) is 2. The value shall be given in the same physical unit as profile acceleration
+hobject (6083 h ).
+Value      Min         Max         Unit	Type	Access	Mapping
+0x2DC6C0   0x0        0xFFFFFFFF 	u32	RW	0
+
+
+
+Variable - 6098 - Homing method:
+---------------------------------------------------------------------------
+This object indicates the configured homing method that shall be used.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x80       0x7F       	i8	RW	0
+
+
+
+Array - 6099 - Homing speeds:
+---------------------------------------------------------------------------
+This object indicates the configured speeds used during homing procedure. The values shall
+be given in user-defined velocity units.
+6099:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x2        0x0        0xFF       	u8	CONST	0
+
+6099:001 Speed during search for switch
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x0        0xFFFFFFFF 	u32	RW	0
+
+6099:002 Speed during search for zero
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x7D0      0x0        0xFFFFFFFF 	u32	RW	0
+
+
+
+Variable - 609A - Homing acceleration:
+---------------------------------------------------------------------------
+This object indicates the configured acceleration and deceleration to be used during homing
+procedure. The value shall be given in user-defined acceleration units.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x2710     0x0        0xFFFFFFFF 	u32	RW	0
+
+
+
+Array - 60A4 - Profile jerk:
+---------------------------------------------------------------------------
+This object indicates the configured set of jerk parameters, used during the profile movement.
+60A4:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x1        0x0        0xFF       	u8	CONST	0
+
+60A4:001 Profile Jerk 1
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0xEE6B2800 0x0        0xFFFFFFFF 	u32	RW	0
+
+
+
+Variable - 60C5 - Max acceleration:
+---------------------------------------------------------------------------
+This object indicates the configured maximal acceleration. It is used to limit the acceleration to
+an acceptable value in order to prevent the motor and the moved mechanics from being
+destroyed. The value shall be given in user-defined acceleration physical units.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x2DC6C0   0x0        0xFFFFFFFF 	u32	RW	0
+
+
+
+Array - 60E3 - Supported homing methods:
+---------------------------------------------------------------------------
+This object provides the supported homing methods of the drive.
+60E3:000 Highest sub-index supported
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x3        0x0        0xFF       	u8	CONST	0
+
+60E3:001 1st supported homing method
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x21       0x80       0x7F       	i8	RO	0
+
+60E3:002 2nd supported homing method
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x22       0x80       0x7F       	i8	RO	0
+
+60E3:003 3rd supported homing method
+
+Value      Min         Max         Unit	Type	Access	Mapping
+0x25       0x80       0x7F       	i8	RO	0
+
+
+
+Variable - 60F4 - Following error actual value:
+---------------------------------------------------------------------------
+This object provides the actual value of the following error. The value shall be given in user -
+defined position units.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x80000000 0x7FFFFFFF user-defined position units	i32	RO	0
+
+
+
+Variable - 60FC - Position demand internal value:
+---------------------------------------------------------------------------
+This object provides the output of the trajectory generator in profile position mode. This value
+shall be given in increments of the position encoder.
+Value      Min         Max         Unit	Type	Access	Mapping
+0x0        0x80000000 0x7FFFFFFF increments	i32	RO	0
+
+
+
+Variable - 6502 - Supported Drive Modes:
+---------------------------------------------------------------------------
+This object provides information on the supported drive modes.
+
+This object is organized bit-wise. The bits have the following meaning:
+    bit 0: profile position mode
+    bit 1: velocity mode
+    bit 2: profile velocity mode
+    bit 3: profile torque mode
+    bit 4: reserved
+    bit 5: homing mode
+    bit 6: interpolated position mode
+    bit 7: cyclic synchronous position mode
+    bit 8: cyclic synchronous velocity mode
+    bit 9: cyclic synchronous torque mode
+    bit 10-15: reserved
+    bit 16-31: manufacturer-specific
+
+The bit values have the following meaning:
+    bit value = 0: mode is not supported
+    bit value = 1: mode is supported
+Value      Min         Max         Unit	Type	Access	Mapping
+0x80       0x0        0xFFFFFFFF 	u32	RO	0
+
+
+
+-- Abbreviations --
+
+
+
+i8		INTEGER8
+i16		INTEGER16
+i32		INTEGER32
+u8		UNSIGNED8
+u16		UNSIGNED16
+u32		UNSIGNED32
+r32		REAL32
+vstr	VISIBLE_STRING
+
+
+
+
+This document was created using Industrial Communication Creator 7.3.0.202404220722 by port GmbH

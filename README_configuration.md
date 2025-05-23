@@ -55,11 +55,11 @@ node.sdo["Hybrid control switch point"].raw = 40
 ### 5. Define Motion Profile Parameters
 
 ```python
-node.sdo["Max profile velocity"].raw = 400000
-node.sdo["Profile velocity"].raw = 200000
-node.sdo["Profile acceleration"].raw = 1000000
-node.sdo["Max acceleration"].raw = 3000000
-node.sdo["Profile jerk"][1].raw = 1000000000
+node.sdo["Max profile velocity"].raw = 400 * INC_PER_MM        # Max velocity (inc/s)         | 400 mm/s
+node.sdo["Profile velocity"].raw     = 200 * INC_PER_MM        # Target velocity (inc/s)      | 200 mm/s
+node.sdo["Profile acceleration"].raw = 1000 * INC_PER_MM       # Target acceleration (inc/s²) | 1000 mm/s²
+node.sdo["Max acceleration"].raw     = 3000 * INC_PER_MM       # Max acceleration (inc/s²)    | 3000 mm/s²
+node.sdo["Profile jerk"][1].raw      = 1_000_000 * INC_PER_MM  # Profile Jerk (inc/s³)        | 1_000_000 mm/s³
 ```
 
 ### 6. Configure Homing Settings

@@ -22,7 +22,7 @@ from canopen import BaseNode402
 
 from config import (
     ControlMode, DEFAULT_BOOTUP_TIMEOUT, DEFAULT_SDO_TIMEOUT,
-    STEPS_PER_MM, LEDMask, NODE_ID, NMTState, RESTORE_ALL_DEFAULT_PARAMETERS, DEFAULT_STATUS_LOGGING,
+    INC_PER_MM, LEDMask, NODE_ID, NMTState, RESTORE_ALL_DEFAULT_PARAMETERS, DEFAULT_STATUS_LOGGING,
     SAVE_ALL_PARAMETERS
 )
 from utils import setup_network, BIT
@@ -125,11 +125,11 @@ def configure_motion_parameters(node: BaseNode402) -> None:
     node.sdo["Motor duty cycle bounds"][3].raw = 50  # Maximum
 
     # Trajectory parameters
-    node.sdo["Max profile velocity"].raw = int(400 * STEPS_PER_MM)   # Max velocity
-    node.sdo["Profile velocity"].raw = int(200 * STEPS_PER_MM)       # Target velocity
-    node.sdo["Profile acceleration"].raw = int(1000 * STEPS_PER_MM)  # Target acceleration
-    node.sdo["Max acceleration"].raw = int(3000 * STEPS_PER_MM)      # Max acceleration
-    node.sdo["Profile jerk"][1].raw = int(1_000_000 * STEPS_PER_MM)  # Profile Jerk
+    node.sdo["Max profile velocity"].raw = int(400 * INC_PER_MM)        # Max velocity (inc/s)         | 400 mm/s
+    node.sdo["Profile velocity"].raw     = int(200 * INC_PER_MM)        # Target velocity (inc/s)      | 200 mm/s
+    node.sdo["Profile acceleration"].raw = int(1000 * INC_PER_MM)       # Target acceleration (inc/s²) | 1000 mm/s²
+    node.sdo["Max acceleration"].raw     = int(3000 * INC_PER_MM)       # Max acceleration (inc/s²)    | 3000 mm/s²
+    node.sdo["Profile jerk"][1].raw      = int(1_000_000 * INC_PER_MM)  # Profile Jerk (inc/s³)        | 1_000_000 mm/s³
 
     # Position limits (disabled)
     node.sdo["Software position limit"][1].raw = 0  # Min position limit

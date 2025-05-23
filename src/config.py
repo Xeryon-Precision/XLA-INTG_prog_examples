@@ -31,7 +31,7 @@ from canopen.profiles.p402 import OperationMode
 CAN_INTERFACE = "slcan"
 
 # Channel (str): CAN channel (e.g., "COM3", "/dev/ttyACM0").
-CAN_CHANNEL = "/dev/canable"
+CAN_CHANNEL = "COM3"
 
 # Filename of the EDS file
 EDS_PATH = "../eds/xeryon_xla_5_eds.eds"

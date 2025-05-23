@@ -14,7 +14,7 @@ from typing import Tuple
 import time
 from canopen import Network, BaseNode402
 
-from src.config import ControlMode, EDS_PATH, CAN_INTERFACE, CAN_CHANNEL, CAN_DEFAULT_BITRATE, DEFAULT_TIMEOUT, P402CWState
+from config import ControlMode, EDS_PATH, CAN_INTERFACE, CAN_CHANNEL, CAN_DEFAULT_BITRATE, DEFAULT_TIMEOUT, P402CWState
 
 # -----------------------------------------------------------------------------
 # Bit manipulation utilities

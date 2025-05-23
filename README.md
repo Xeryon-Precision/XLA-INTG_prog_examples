@@ -26,9 +26,8 @@ pip install -r requirements.txt
 
 ### 2. Interface Compatibility
 
-Ensure your hardware (e.g., USB-to-CAN dongle) is supported by your system:
+Ensure your hardware (e.g., USB-to-CAN dongle) is connected and supported by your system:
 
-* For `slcan` over USB: install `pyserial`
 * For Linux `socketcan`: ensure kernel CAN drivers are loaded
 
 ---

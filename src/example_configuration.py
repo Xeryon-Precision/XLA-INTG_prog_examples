@@ -86,11 +86,11 @@ def configure_input_overrides(node: BaseNode402) -> None:
     override_cfg = 0
 
     if enable_enable_override:
-        node.sdo["I/O Override settings"][1].raw = 0    # Enable
+        node.sdo["I/O Override settings"][1].raw = 0  # Enable
         override_cfg |= BIT(0)
 
     if enable_direction_override:
-        node.sdo["I/O Override settings"][2].raw = 0    # Direction
+        node.sdo["I/O Override settings"][2].raw = 0  # Direction
         override_cfg |= BIT(1)
 
     if enable_speed_override:
@@ -98,7 +98,7 @@ def configure_input_overrides(node: BaseNode402) -> None:
         override_cfg |= BIT(2)
 
     if enable_homing_override:
-        node.sdo["I/O Override settings"][4].raw = 0    # Home
+        node.sdo["I/O Override settings"][4].raw = 0  # Home
         override_cfg |= BIT(3)
 
     node.sdo["I/O Override Enable"].raw = override_cfg
@@ -128,7 +128,7 @@ def configure_motion_parameters(node: BaseNode402) -> None:
     log.info(f"Node {node.id}: Configuring motion parameters...")
 
     # Motor phase
-    node.sdo["Motor phase bounds"][1].raw = 0   # Minimum
+    node.sdo["Motor phase bounds"][1].raw = 0  # Minimum
     node.sdo["Motor phase bounds"][2].raw = 90  # Nominal
     node.sdo["Motor phase bounds"][3].raw = 90  # Maximum
 
@@ -138,11 +138,11 @@ def configure_motion_parameters(node: BaseNode402) -> None:
     node.sdo["Motor duty cycle bounds"][3].raw = 50  # Maximum
 
     # Trajectory parameters
-    node.sdo["Max profile velocity"].raw = int(400 * INC_PER_MM)        # Max velocity (inc/s)         | 400 mm/s
-    node.sdo["Profile velocity"].raw     = int(200 * INC_PER_MM)        # Target velocity (inc/s)      | 200 mm/s
-    node.sdo["Profile acceleration"].raw = int(1000 * INC_PER_MM)       # Target acceleration (inc/s²) | 1000 mm/s²
-    node.sdo["Max acceleration"].raw     = int(3000 * INC_PER_MM)       # Max acceleration (inc/s²)    | 3000 mm/s²
-    node.sdo["Profile jerk"][1].raw      = int(1_000_000 * INC_PER_MM)  # Profile Jerk (inc/s³)        | 1_000_000 mm/s³
+    node.sdo["Max profile velocity"].raw = int(400 * INC_PER_MM)  # Max velocity (inc/s)         | 400 mm/s
+    node.sdo["Profile velocity"].raw = int(200 * INC_PER_MM)  # Target velocity (inc/s)      | 200 mm/s
+    node.sdo["Profile acceleration"].raw = int(1000 * INC_PER_MM)  # Target acceleration (inc/s²) | 1000 mm/s²
+    node.sdo["Max acceleration"].raw = int(3000 * INC_PER_MM)  # Max acceleration (inc/s²)    | 3000 mm/s²
+    node.sdo["Profile jerk"][1].raw = int(1_000_000 * INC_PER_MM)  # Profile Jerk (inc/s³)        | 1_000_000 mm/s³
 
     # Position limits (disabled)
     node.sdo["Software position limit"][1].raw = 0  # Min position limit
@@ -159,16 +159,16 @@ def configure_homing_parameters(node: BaseNode402) -> None:
     log.info(f"Node {node.id}: Configuring homing parameters...")
 
     # Homing position
-    node.sdo["Home offset"].raw = 0                # Home offset
+    node.sdo["Home offset"].raw = 0  # Home offset
 
     # Homing method
-    node.sdo["Homing parameters"][1].raw = 250     # Step size
-    node.sdo["Homing parameters"][2].raw = 2       # Standstill Tolerance
-    node.sdo["Homing parameters"][3].raw = 100     # Standstill time (ms)
+    node.sdo["Homing parameters"][1].raw = 250  # Step size
+    node.sdo["Homing parameters"][2].raw = 2  # Standstill Tolerance
+    node.sdo["Homing parameters"][3].raw = 100  # Standstill time (ms)
 
     # Homing speed
-    node.sdo["Homing speeds"][2].raw = 50          # Homing Speed during search for zero
-    node.sdo["Homing acceleration"].raw = 10_000   # Homing acceleration
+    node.sdo["Homing speeds"][2].raw = 50  # Homing Speed during search for zero
+    node.sdo["Homing acceleration"].raw = 10_000  # Homing acceleration
 
 
 def save_configuration(node: BaseNode402) -> None:

@@ -13,7 +13,6 @@ from enum import IntEnum, IntFlag, unique, StrEnum
 
 from canopen.profiles.p402 import OperationMode
 
-
 # -----------------------------------------------------------------------------
 # Configuration
 #
@@ -39,7 +38,6 @@ EDS_PATH = "../eds/xeryon_xla_5_eds.eds"
 # Default Node ID is 32
 NODE_ID = 32
 
-
 # -----------------------------------------------------------------------------
 # DEFAULT TIMEOUTS
 # -----------------------------------------------------------------------------
@@ -47,14 +45,12 @@ DEFAULT_SDO_TIMEOUT = 10.0  # seconds
 DEFAULT_BOOTUP_TIMEOUT = 15  # seconds
 DEFAULT_TIMEOUT = 5.0  # seconds
 
-
 # -----------------------------------------------------------------------------
 # Restore Pa
 # -----------------------------------------------------------------------------
 RESTORE_ALL_DEFAULT_PARAMETERS = 0x64616F6C
 DEFAULT_STATUS_LOGGING = 3 + 8
 SAVE_ALL_PARAMETERS = 0x65766173
-
 
 # -----------------------------------------------------------------------------
 # Conversion factors
@@ -76,6 +72,7 @@ class CANBitrate(IntEnum):
     K500 = 500_000
     K800 = 800_000
     M1 = 1_000_000
+
 
 SUPPORTED_BITRATES = list(CANBitrate)
 CAN_DEFAULT_BITRATE = CANBitrate.K125

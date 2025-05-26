@@ -15,96 +15,20 @@ For more information, please read the README:
 """
 
 import logging
-
 import time
+
 from canopen import BaseNode402
 
-from config import (
-    HomingMethod, ControlMode, DEFAULT_BOOTUP_TIMEOUT, DEFAULT_SDO_TIMEOUT, NODE_ID, NMTState, P402CWState
+from config import ControlMode, NODE_ID, P402CWState
+
+from utils import (
+    set_control_mode, wait_for_statusword_flags, setup_network, BIT, transition_402_cw_state, homing, configure_node
 )
-from utils import set_control_mode, wait_for_statusword_flags, setup_network, BIT, transition_402_cw_state
 
 # ----- Logging setup -----
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 log = logging.getLogger(__name__)
 logging.getLogger("canopen").setLevel(logging.WARNING)
-
-
-def configure_node(node: BaseNode402) -> None:
-    """
-    Resets the node, waits for bootup, loads configuration, and enables the state machine.
-
-    Args:
-        node (BaseNode402): The CANopen device node.
-    """
-    node.nmt.state = NMTState.RESET
-    node.nmt.wait_for_bootup(DEFAULT_BOOTUP_TIMEOUT)
-    node.sdo.RESPONSE_TIMEOUT = DEFAULT_SDO_TIMEOUT
-
-    log.info(f"Node {node.id}: Booted with state {node.nmt.state}")
-    node.load_configuration()
-
-    log.info(f"Node {node.id}: Configuration loaded, setting up CiA 402 state machine")
-    node.setup_402_state_machine()
-
-    node.nmt.state = NMTState.OPERATIONAL
-    log.info(f"Node {node.id}: Switched to OPERATIONAL state")
-
-
-def homing(node: BaseNode402, direction_positive=True) -> None:
-    """
-    Performs a homing operation using the configured homing method.
-
-    Args:
-        node (BaseNode402): The CANopen device node.
-        direction_positive (bool): True = Homing method to use is positive index, otherwise negative.
-    """
-    log.info(f"Node {node.id}: Start Homing")
-
-    # Set CiA 402 State machine to SWITCH ON DISABLED
-    transition_402_cw_state(node, P402CWState.SWITCH_ON_DISABLED)
-    
-    # Set CiA 402 State machine to READY TO SWITCH ON
-    transition_402_cw_state(node, P402CWState.READY_TO_SWITCH_ON)
-
-    # Set CiA 402 State machine to SWITCHED ON
-    transition_402_cw_state(node, P402CWState.SWITCH_ON)
-
-    # Set mode to Homing
-    set_control_mode(node, ControlMode.HOMING)
-
-    # Set CiA 402 State machine to OPERATION ENABLED
-    transition_402_cw_state(node, P402CWState.OPERATION_ENABLED)
-
-    # Set the homing offset
-    node.sdo["Home offset"].raw = 0
-
-    if direction_positive:
-        method = HomingMethod.POS_INDEX
-    else:
-        method = HomingMethod.NEG_INDEX
-
-    node.sdo["Homing method"].raw = method
-
-    # Start homing (set bit 4)
-    log.info(f"Node {node.id}: Starting homing with method {method}")
-    node.controlword = node.sdo["Controlword"].raw | BIT(4)
-
-    # Wait until Homing attained
-    try:
-        log.info(f"Node {node.id}: Waiting for Homing attained")
-        wait_for_statusword_flags(node, BIT(12))
-    except Exception:
-        log.error(f"Node {node.id}: Homing failed")
-
-        # Clear bit 4 when homing failed
-        node.controlword = node.sdo["Controlword"].raw & ~BIT(4)
-        return
-
-    # Clear bit 4 after homing is attained
-    node.controlword = node.sdo["Controlword"].raw & ~BIT(4)
-
-    log.info(f"Node {node.id}: Homing completed")
 
 
 def position_loop(node: BaseNode402) -> None:
@@ -199,7 +123,7 @@ def send_position_command(node: BaseNode402, target_pos: int) -> None:
 
 def main() -> None:
     """
-    Entry point for executing the homing and position.
+    Entry point for executing the homing and profile position mode.
     """
     try:
         network, absolute_path = setup_network()

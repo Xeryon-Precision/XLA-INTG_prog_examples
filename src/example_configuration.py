@@ -105,6 +105,19 @@ def configure_input_overrides(node: BaseNode402) -> None:
     node.sdo["Hybrid control switch point"].raw = 40
 
 
+def configure_frequency(node: BaseNode402):
+    """
+    Configures motor frequency bounds.
+
+    Args:
+        node (BaseNode402): The CANopen device node to configure.
+    """
+    frequency = 85000
+    node.sdo["Motor frequency bounds"][1].raw = frequency  # Minimum
+    node.sdo["Motor frequency bounds"][2].raw = frequency  # Nominal
+    node.sdo["Motor frequency bounds"][3].raw = frequency  # Maximum
+
+
 def configure_motion_parameters(node: BaseNode402) -> None:
     """
     Configures motor phase, duty cycle, and trajectory profile parameters.
@@ -193,6 +206,8 @@ def main() -> None:
         reset_and_setup_logging(node)
 
         configure_io(node)
+
+        # configure_frequency()
 
         configure_input_overrides(node)
 

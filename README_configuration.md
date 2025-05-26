@@ -11,6 +11,7 @@ This includes:
 * Resetting parameters to factory defaults (optional)
 * Configuring I/O and LED mappings
 * Setting control mode
+* Setting frequency bounds
 * Setting trajectory parameters
 * Setting homing parameters
 * Saving changes to flash
@@ -112,6 +113,6 @@ A reset must be performed after this to load all parameters from flash.
 
 ## Notes
 
-* You must call save_configuration()` to persist changes after setup.
+* You must call `save_configuration()` to persist changes after setup.
 * Homing and motion parameters should only be set when the device is in a safe state (e.g. SWITCHED ON).
 * Reset the device after configuration to ensure the saved parameters are loaded from non-volatile memory.

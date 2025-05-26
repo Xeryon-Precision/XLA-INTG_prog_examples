@@ -1,6 +1,6 @@
 # Xeryon CANopen Example
 
-This repository provides structured examples for working with CiA 402-compliant devices from Xeryon over CANopen. It includes modular scripts for configuration, homing, and profile position movement, using a consistent logging and state machine approach.
+This repository provides structured examples for working with CiA 402-compliant devices from Xeryon over CANopen. It includes modular scripts for configuration, homing, and profile position movement.
 
 ## Wiring
 
@@ -10,7 +10,7 @@ For this demo, we use the **Fysetc UCAN** USB-to-CAN adapter. However, you are f
 
 Alternatively, you can also use a microcontroller or any other device that supports CAN communication.
 
-<img src="img/XLA-INTG-CTRL_wiring_diagram.jpg" alt="Wiring Diagram" style="border-radius: 8px; width: 100%; max-width: 1000px;" />
+<img src="img/XLA-INTG-CTRL_wiring_diagram.jpg" alt="Wiring Diagram" style="border-radius: 10px; width: 100%; max-width: 1000px;" />
 
 ---
 
@@ -30,8 +30,6 @@ Ensure your hardware (e.g., USB-to-CAN dongle) is connected and supported by you
 
 * For Linux `socketcan`: ensure kernel CAN drivers are loaded
 
----
-
 ### 3. Change `config.py`
 
 To configure the CAN interface and channel for your platform, open `config.py` and update the following values:
@@ -44,19 +42,28 @@ CAN_INTERFACE = "slcan"
 CAN_CHANNEL = "COM3"
 ```
 
+### 4. Run examples
+
+Once configured, you can run any of the example files to test communication or functionality:
+
+```python
+python example_<name>.py
+```
+
 ---
 
 ## File Structure and Purpose
 
-| File                        | Description                                                                                                            |
-|-----------------------------|------------------------------------------------------------------------------------------------------------------------|
-| `example_configure.py`      | Configures the device: I/O, logging, motion profiles, and saves to flash                                               |
-| `example_position.py`       | Executes a homing procedure using configured parameters,<br>sends target positions using CiA 402 Profile Position mode |
-| `helpers.py`                | Reusable utility functions                                                                                             |
-| `config.py`                 | Used for configuration and Enum constants                                                                              |
-| `requirements.txt`          | Package requirements for Python environment setup                                                                      |
-| `xeryon_xla_5_eds.eds`      | EDS File                                                                                                               |
-| `xeryon_xla_5_eds_docu.txt` | Human-readable documentation of EDS fields                                                                             |
+| File                              | Description                                                                                                            |
+|-----------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| `src/example_configure.py`        | Configures the device: I/O, logging, motion profiles, and saves to flash                                               |
+| `src/example_homing.py`           | Executes a homing procedure using configured parameters.                                                               |
+| `src/example_profile_position.py` | Executes a homing procedure using configured parameters,<br>sends target positions using CiA 402 Profile Position mode |
+| `src/utils.py`                    | Reusable utility functions                                                                                             |
+| `src/config.py`                   | Used for configuration and Enum constants                                                                              |
+| `eds/xeryon_xla_5_eds.eds`        | EDS File                                                                                                               |
+| `eds/xeryon_xla_5_eds_docu.txt`   | Human-readable documentation of EDS fields                                                                             |
+| `requirements.txt`                | Package requirements for Python environment setup                                                                      |
 
 ---
 
@@ -66,7 +73,7 @@ CAN_CHANNEL = "COM3"
 |-------------------------------------------------------|-------------------------------------|
 | [Configuration](./README_configuration.md)            | How to set parameters and save them |
 | [Homing](./README_homing.md)                          | How to execute a homing operation   |
-| [Profile position mode](./README_profile_position.md) | Sending Profile Position commands   |
+| [Profile Position mode](./README_profile_position.md) | Sending Profile Position commands   |
 
 ---
 
@@ -78,7 +85,7 @@ An EDS (Electronic Data Sheet) is a standardized INI-style file that describes t
 
 ### What is `eds_docu.txt`?
 
-This is a human-readable reference exported from the EDS for easier debugging and script development. It typically includes:
+This is a human-readable reference exported from the EDS for easier debugging and script development. It includes:
 
 * Object indexes
 * Subindex descriptions
@@ -92,4 +99,4 @@ The path to your `.eds` file is set in `config.py` as `EDS_PATH`:
 EDS_PATH = "../eds/xeryon_xla_5_eds.eds"
 ```
 
-Make sure the actual `.eds` file is present or update the path accordingly.
+Make sure the actual `.eds` file is present or update the path accordingly in `src/config.py`.

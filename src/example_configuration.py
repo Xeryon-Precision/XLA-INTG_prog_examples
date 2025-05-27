@@ -60,10 +60,10 @@ def configure_io(node: BaseNode402) -> None:
         node (BaseNode402): The CANopen device node to configure.
     """
     log.info(f"Node {node.id}: Configuring I/O and LEDs...")
-    node.sdo["I/O Configuration"][1].raw = 1  # AI1 / speed pin config
-    node.sdo["I/O Configuration"][2].raw = 1  # DI1 config
-    node.sdo["I/O Configuration"][3].raw = 1  # DI2 config
-    node.sdo["I/O Configuration"][4].raw = 1  # DI3 config
+    node.sdo["I/O Configuration"][1].raw = 0  # AI1 / speed pin config
+    node.sdo["I/O Configuration"][2].raw = 0  # DI1 config
+    node.sdo["I/O Configuration"][3].raw = 0  # DI2 config
+    node.sdo["I/O Configuration"][4].raw = 0  # DI3 config
 
     node.sdo["LED Configuration"].raw = LEDMask.ALL
 
@@ -217,7 +217,11 @@ def main() -> None:
 
         save_configuration(node)
 
-        log.warning(f"Node {node.id}: Configuration complete. Please reset the device to apply changes.")
+        log.info(f"Node {node.id}: Resetting the device to apply changes.")
+        node.nmt.state = NMTState.RESET
+        node.nmt.wait_for_bootup(DEFAULT_BOOTUP_TIMEOUT)
+
+        log.info(f"Node {node.id}: Configuration complete.")
 
     except KeyboardInterrupt:
         log.info("Keyboard interrupt detected, stopping program..")

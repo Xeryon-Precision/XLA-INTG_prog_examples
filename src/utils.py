@@ -204,7 +204,7 @@ def homing(node: BaseNode402, direction_positive=True) -> None:
 
     # Start homing (set bit 4)
     log.info(f"Node {node.id}: Starting homing with method {method}")
-    node.controlword = node.sdo["Controlword"].raw | BIT(4)
+    node.sdo["Controlword"].raw |= BIT(4)
 
     # Wait until Homing attained
     try:
@@ -214,11 +214,11 @@ def homing(node: BaseNode402, direction_positive=True) -> None:
         log.error(f"Node {node.id}: Homing failed/n {e}")
 
         # Clear bit 4 when homing failed
-        node.controlword = node.sdo["Controlword"].raw & ~BIT(4)
+        node.sdo["Controlword"].raw &= ~BIT(4)
         return
 
     # Clear bit 4 after homing is attained
-    node.controlword = node.sdo["Controlword"].raw & ~BIT(4)
+    node.sdo["Controlword"].raw &= ~BIT(4)
 
     log.info(f"Node {node.id}: Homing completed")
 

@@ -103,14 +103,14 @@ def send_position_command(node: BaseNode402, target_pos: int) -> None:
 
     # Set bit 4 to signal new set-point
     log.info(f"Node {node.id}: Setting new set-point to to initiate motion")
-    node.controlword = node.sdo["Controlword"].raw | BIT(4)
+    node.sdo['Controlword'].raw |= BIT(4)
 
     # Wait for Acknoledge bit 12 to be set in Statusword
     log.info(f"Node {node.id}: Waiting for acknowledged")
     wait_for_statusword_flags(node, BIT(12))
 
     # Clear bit 4 after acknowledgment
-    node.controlword = node.sdo["Controlword"].raw & ~BIT(4)
+    node.sdo['Controlword'].raw &= ~BIT(4)
 
     # Wait for Target Reached bit 10 to be set in Statusword
     log.info(f"Node {node.id}: Waiting for target reached")

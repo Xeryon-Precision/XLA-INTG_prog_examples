@@ -79,7 +79,7 @@ node.sdo["Homing method"].raw = method                      # Homing method (0x6
 ### 4. Trigger Homing
 
 ```python
-node.controlword = node.sdo["Controlword"].raw | BIT(4)     # Set bit 4 to start homing
+node.sdo["Controlword"].raw |= BIT(4)     # Set bit 4 to start homing
 ```
 
 ### 5. Wait for Homing to Complete
@@ -91,7 +91,7 @@ wait_for_statusword_flags(node, BIT(12))                    # Bit 12 = homing at
 ### 6. Finalize
 
 ```python
-node.controlword = node.sdo["Controlword"].raw & ~BIT(4)    # Clear bit 4
+node.sdo["Controlword"].raw &= ~BIT(4)    # Clear bit 4
 
 log.info(f"Node {node.id}: Homing completed")
 ```

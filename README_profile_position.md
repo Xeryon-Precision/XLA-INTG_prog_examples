@@ -83,9 +83,9 @@ The `send_position_command()` function does the following:
 
 * Writes target to Target Position (0x607A)
 * Sets the new set-point bit (bit 4) in Controlword (0x6040)
-* Waits for acknowledgement bit via Statusword (bit 12)
-* Clears the set-point bit
-* Waits for Target reached bit via Statusword (bit 10)
+* Waits for acknowledgement bit (bit 12) via Statusword (0x6041)
+* Clears the new set-point bit (bit 4) in Cotrolword (0x6040)
+* Waits for Target reached bit (bit 10) via Statusword (0x6041)
 
 ### 5. Safely Disable the Drive
 

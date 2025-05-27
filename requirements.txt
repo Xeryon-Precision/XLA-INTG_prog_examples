@@ -1,0 +1,3 @@
+canopen~=2.3.0
+python-can>=4.5.0
+pyserial>=3.5

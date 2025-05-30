@@ -20,6 +20,7 @@ import time
 from canopen import BaseNode402
 
 from config import NodeOperationMode, NODE_ID, NodeState
+from src.utils import send_RPDO3, get_controlword_RPDO3, wait_for_statusword_flags_RPDO3, get_actual_position_TPDO3
 
 from utils import (
     set_node_operation_mode, wait_for_statusword_flags, setup_network, BIT, set_node_state, homing, configure_node
@@ -59,19 +60,21 @@ def position_loop(node: BaseNode402) -> None:
     # Set CiA 402 State machine to OPERATION ENABLED
     set_node_state(node, NodeState.OPERATION_ENABLED)
 
-    pos_1 = -10000
-    pos_2 = 10000
-    step = 5000
+    send_RPDO3(node, controlword=0x0F)
+    send_position_command(node, target_pos=0)
+
+    pos_1 = -19000
+    pos_2 = 19000
+    step = 1000
 
     positions = list(range(pos_1, pos_2, step)) + list(range(pos_2, pos_1, -step))
-    step_delay = 0.5
 
     err_count = 0
     for i in range(5):
         try:
             for target_pos in positions:
                 send_position_command(node, target_pos)
-                time.sleep(step_delay)
+
         except Exception as e:
             log.warning(f"Node {node.id}: Communication failure: {e}")
 
@@ -99,25 +102,25 @@ def send_position_command(node: BaseNode402, target_pos: int) -> None:
         target_pos (int): Target position in internal units.
     """
     log.info(f"Node {node.id}: Sending target position {target_pos}")
-    node.sdo["Target Position"].raw = target_pos
+    send_RPDO3(node, target_position=target_pos)
 
     # Set bit 4 to signal new set-point
     log.info(f"Node {node.id}: Setting new set-point to to initiate motion")
-    node.sdo['Controlword'].raw |= BIT(4)
+    send_RPDO3(node, controlword=get_controlword_RPDO3(node) | BIT(4))
 
     # Wait for Acknoledge bit 12 to be set in Statusword
     log.info(f"Node {node.id}: Waiting for acknowledged")
-    wait_for_statusword_flags(node, BIT(12))
+    wait_for_statusword_flags_RPDO3(node, BIT(12))
 
     # Clear bit 4 after acknowledgment
-    node.sdo['Controlword'].raw &= ~BIT(4)
+    send_RPDO3(node, controlword=get_controlword_RPDO3(node) & ~BIT(4))
 
     # Wait for Target Reached bit 10 to be set in Statusword
     log.info(f"Node {node.id}: Waiting for target reached")
-    wait_for_statusword_flags(node, BIT(10))
+    wait_for_statusword_flags_RPDO3(node, BIT(10))
 
     # Read the actual position after target is reached
-    current_pos = node.sdo["Position Actual Value"].raw
+    current_pos = get_actual_position_TPDO3(node)
     log.info(f"Node {node.id}: Reached position {current_pos}")
 
 

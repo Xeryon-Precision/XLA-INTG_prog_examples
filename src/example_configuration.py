@@ -21,11 +21,11 @@ import logging
 from canopen import BaseNode402
 
 from config import (
-    ControlMode, DEFAULT_BOOTUP_TIMEOUT, DEFAULT_SDO_TIMEOUT,
+    NodeOperationMode, DEFAULT_BOOTUP_TIMEOUT, DEFAULT_SDO_TIMEOUT,
     INC_PER_MM, LEDMask, NODE_ID, NMTState, RESTORE_ALL_DEFAULT_PARAMETERS, DEFAULT_STATUS_LOGGING,
     SAVE_ALL_PARAMETERS
 )
-from utils import setup_network, BIT
+from utils import setup_network, BIT, configure_node, reset_node
 
 # ----- Logging setup -----
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -49,7 +49,7 @@ def reset_and_setup_logging(node: BaseNode402) -> None:
     node.sdo["Status logging verbosity flags"].raw = DEFAULT_STATUS_LOGGING
 
     # Switch to mode profile position
-    node.sdo["Mode of operation"].raw = ControlMode.TRAJECTORY
+    node.sdo["Mode of operation"].raw = NodeOperationMode.TRAJECTORY
 
 
 def configure_io(node: BaseNode402) -> None:
@@ -193,15 +193,7 @@ def main() -> None:
         node = BaseNode402(NODE_ID, eds_path)
         network.add_node(node)
 
-        log.info(f"Node {NODE_ID}: Connecting to CAN network...")
-
-        node.nmt.state = NMTState.RESET
-        node.nmt.wait_for_bootup(DEFAULT_BOOTUP_TIMEOUT)
-        node.sdo.RESPONSE_TIMEOUT = DEFAULT_SDO_TIMEOUT
-
-        log.info(f"Node {node.id}: Booted. Current NMT state: {node.nmt.state}")
-        node.nmt.state = NMTState.OPERATIONAL
-        log.info(f"Node {node.id}: Switched to OPERATIONAL state")
+        configure_node(node)
 
         reset_and_setup_logging(node)
 
@@ -217,9 +209,7 @@ def main() -> None:
 
         save_configuration(node)
 
-        log.info(f"Node {node.id}: Resetting the device to apply changes.")
-        node.nmt.state = NMTState.RESET
-        node.nmt.wait_for_bootup(DEFAULT_BOOTUP_TIMEOUT)
+        reset_node(node)
 
         log.info(f"Node {node.id}: Configuration complete.")
 

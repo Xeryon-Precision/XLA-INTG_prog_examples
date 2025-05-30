@@ -97,7 +97,7 @@ class NMTState(StrEnum):
 # CiA 402 Profile Controlword States
 # -----------------------------------------------------------------------------
 @unique
-class P402CWState(StrEnum):
+class NodeState(StrEnum):
     SWITCH_ON_DISABLED = "SWITCH ON DISABLED"
     DISABLE_VOLTAGE = "DISABLE VOLTAGE"
     READY_TO_SWITCH_ON = "READY TO SWITCH ON"
@@ -110,7 +110,7 @@ class P402CWState(StrEnum):
 # Control mode identifiers
 # -----------------------------------------------------------------------------
 @unique
-class ControlMode(IntEnum):
+class NodeOperationMode(IntEnum):
     HOMING = OperationMode.HOMING
     TRAJECTORY = OperationMode.PROFILED_POSITION
     OFF = OperationMode.NO_MODE

@@ -15,7 +15,7 @@ from typing import Tuple
 from canopen import Network, BaseNode402
 
 from config import (
-    ControlMode, EDS_PATH, CAN_INTERFACE, CAN_CHANNEL, CAN_DEFAULT_BITRATE, DEFAULT_TIMEOUT, P402CWState, HomingMethod,
+    NodeOperationMode, EDS_PATH, CAN_INTERFACE, CAN_CHANNEL, CAN_DEFAULT_BITRATE, DEFAULT_TIMEOUT, NodeState, HomingMethod,
     DEFAULT_BOOTUP_TIMEOUT, DEFAULT_SDO_TIMEOUT, NMTState
 )
 
@@ -26,7 +26,7 @@ BIT = lambda n: 1 << n
 CLRBIT = lambda n: ~(1 << n)
 
 
-def transition_402_cw_state(node: BaseNode402, state: P402CWState, timeout: float = DEFAULT_TIMEOUT) -> None:
+def set_node_state(node: BaseNode402, state: NodeState, timeout: float = DEFAULT_TIMEOUT) -> None:
     """
     Transitions the device through the CiA 402 state machine using controlword updates,
     and waits until the requested state is confirmed.
@@ -36,51 +36,48 @@ def transition_402_cw_state(node: BaseNode402, state: P402CWState, timeout: floa
 
     Args:
         node (BaseNode402): The CANopen device node.
-        state (str): Desired CiA 402 state (e.g., "READY TO SWITCH ON", "OPERATION ENABLED").
+        state (NodeState): Desired CiA 402 state (e.g., NodeState.SWITCH_ON).
         timeout (float): Maximum duration to wait for the state transition (in seconds).
 
     Raises:
         TimeoutError: If the node fails to reach the desired state within the timeout period.
     """
-    node.state = state
+    node.state = state.value
 
     time_limit = time.monotonic() + timeout
-    while node.state != state:
-        if time.monotonic() > time_limit:
-            raise TimeoutError(f"Node {node.id}: Timeout while changing 402 state to '{state}'")
+    while time.monotonic() < time_limit:
+        if node.state == state.value:
+            log.info( f"Node {node.id}: State = {node.state}")
+            return
 
         time.sleep(0.1)
 
-    mode_set = node.sdo["Mode of operation"].raw
-    mode_active = node.sdo["Mode of operation display"].raw
-    log.info(
-        f"Node {node.id}: 402 State = {node.state}, NMT State = {node.nmt.state}, "
-        f"Mode [set: {mode_set}; active: {mode_active}]")
+    raise TimeoutError(f"Node {node.id}: Timeout while changing node state to '{state.value}'")
 
 
-def set_control_mode(node: BaseNode402, new_mode: ControlMode, timeout: float = DEFAULT_TIMEOUT) -> None:
+def set_node_operation_mode(node: BaseNode402, mode: NodeOperationMode, timeout: float = DEFAULT_TIMEOUT) -> None:
     """
     Sets the desired control mode and verifies it is accepted by the device.
 
     Args:
         node (BaseNode402): The CANopen device node.
-        new_mode (ControlMode): Desired control mode from config.ControlMode.
+        mode (NodeOperationMode): Desired control mode from config.ControlMode.
         timeout (float): Max time to wait for mode confirmation (in seconds).
 
     Raises:
         TimeoutError: If the mode is not confirmed within the timeout.
     """
-    node.sdo["Mode of operation"].raw = new_mode.value
+    node.sdo["Mode of operation"].raw = mode.value
 
     time_limit = time.monotonic() + timeout
     while time.monotonic() < time_limit:
-        if node.sdo["Mode of operation"].raw == new_mode.value:
-            log.info(f"Node {node.id}: Control mode confirmed: {new_mode.name}")
+        if node.sdo["Mode of operation"].raw == mode.value:
+            log.info(f"Node {node.id}: Control mode confirmed: {mode.name}")
             return
 
         time.sleep(0.1)
 
-    raise TimeoutError(f"Node {node.id}: Failed to confirm control mode '{new_mode.name}'")
+    raise TimeoutError(f"Node {node.id}: Failed to confirm control mode '{mode.name}'")
 
 
 def wait_for_statusword_flags(
@@ -167,6 +164,12 @@ def configure_node(node: BaseNode402) -> None:
     log.info(f"Node {node.id}: Switched to OPERATIONAL state")
 
 
+def reset_node(node: BaseNode402):
+    log.info(f"Node {node.id}: Resetting the device to apply changes.")
+    node.nmt.state = NMTState.RESET
+    node.nmt.wait_for_bootup(DEFAULT_BOOTUP_TIMEOUT)
+
+
 def homing(node: BaseNode402, direction_positive=True) -> None:
     """
     Performs a homing operation using the configured homing method.
@@ -178,19 +181,19 @@ def homing(node: BaseNode402, direction_positive=True) -> None:
     log.info(f"Node {node.id}: Start Homing")
 
     # Set CiA 402 State machine to SWITCH ON DISABLED
-    transition_402_cw_state(node, P402CWState.SWITCH_ON_DISABLED)
+    set_node_state(node, NodeState.SWITCH_ON_DISABLED)
 
     # Set CiA 402 State machine to READY TO SWITCH ON
-    transition_402_cw_state(node, P402CWState.READY_TO_SWITCH_ON)
+    set_node_state(node, NodeState.READY_TO_SWITCH_ON)
 
     # Set CiA 402 State machine to SWITCHED ON
-    transition_402_cw_state(node, P402CWState.SWITCH_ON)
+    set_node_state(node, NodeState.SWITCH_ON)
 
     # Set mode to Homing
-    set_control_mode(node, ControlMode.HOMING)
+    set_node_operation_mode(node, NodeOperationMode.HOMING)
 
     # Set CiA 402 State machine to OPERATION ENABLED
-    transition_402_cw_state(node, P402CWState.OPERATION_ENABLED)
+    set_node_state(node, NodeState.OPERATION_ENABLED)
 
     # Set the homing offset
     node.sdo["Home offset"].raw = 0
@@ -223,4 +226,4 @@ def homing(node: BaseNode402, direction_positive=True) -> None:
     log.info(f"Node {node.id}: Homing completed")
 
     # Set CiA 402 State machine to SWITCHED ON
-    transition_402_cw_state(node, P402CWState.SWITCH_ON)
+    set_node_state(node, NodeState.SWITCH_ON)

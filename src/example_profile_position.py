@@ -19,10 +19,10 @@ import time
 
 from canopen import BaseNode402
 
-from config import ControlMode, NODE_ID, P402CWState
+from config import NodeOperationMode, NODE_ID, NodeState
 
 from utils import (
-    set_control_mode, wait_for_statusword_flags, setup_network, BIT, transition_402_cw_state, homing, configure_node
+    set_node_operation_mode, wait_for_statusword_flags, setup_network, BIT, set_node_state, homing, configure_node
 )
 
 # ----- Logging setup -----
@@ -41,23 +41,23 @@ def position_loop(node: BaseNode402) -> None:
     log.info(f"Node {node.id}: Start Position loop")
 
     # Set CiA 402 State machine to SWITCH ON DISABLED
-    transition_402_cw_state(node, P402CWState.SWITCH_ON_DISABLED)
+    set_node_state(node, NodeState.SWITCH_ON_DISABLED)
 
     # Set CiA 402 State machine to READY TO SWITCH ON
-    transition_402_cw_state(node, P402CWState.READY_TO_SWITCH_ON)
+    set_node_state(node, NodeState.READY_TO_SWITCH_ON)
 
     # Set CiA 402 State machine to SWITCHED ON
-    transition_402_cw_state(node, P402CWState.SWITCH_ON)
+    set_node_state(node, NodeState.SWITCH_ON)
 
     # Set mode to Profile Position Mode (Trajectory)
-    set_control_mode(node, ControlMode.TRAJECTORY)
+    set_node_operation_mode(node, NodeOperationMode.TRAJECTORY)
 
     # Set the position window parameters
     node.sdo["Position window"].raw = 5
     node.sdo["Position window time"].raw = 50  # ms
 
     # Set CiA 402 State machine to OPERATION ENABLED
-    transition_402_cw_state(node, P402CWState.OPERATION_ENABLED)
+    set_node_state(node, NodeState.OPERATION_ENABLED)
 
     pos_1 = -10000
     pos_2 = 10000
@@ -82,10 +82,10 @@ def position_loop(node: BaseNode402) -> None:
 
     # Turn off the device after finishing the position loop
     # Set CiA 402 State machine to SWITCHED ON
-    transition_402_cw_state(node, P402CWState.SWITCH_ON)
+    set_node_state(node, NodeState.SWITCH_ON)
 
     # Set CiA 402 State machine to READY TO SWITCH ON
-    transition_402_cw_state(node, P402CWState.READY_TO_SWITCH_ON)
+    set_node_state(node, NodeState.READY_TO_SWITCH_ON)
 
     log.info(f"Node {node.id}: Position loop completed")
 

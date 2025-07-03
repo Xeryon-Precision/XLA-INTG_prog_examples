@@ -52,24 +52,31 @@ This structure shows a full positioning routine using the CiA 402 state machine:
 ### 1. Initialize State Machine
 
 ```python
-transition_402_cw_state(node, P402CWState.SWITCH_ON_DISABLED)
-transition_402_cw_state(node, P402CWState.READY_TO_SWITCH_ON)
-transition_402_cw_state(node, P402CWState.SWITCH_ON)
+# Set CiA 402 State machine to SWITCH ON DISABLED
+set_node_state(node, NodeState.SWITCH_ON_DISABLED)
+
+# Set CiA 402 State machine to READY TO SWITCH ON
+set_node_state(node, NodeState.READY_TO_SWITCH_ON)
+
+# Set CiA 402 State machine to SWITCHED ON
+set_node_state(node, NodeState.SWITCH_ON)
 ```
 
 ### 2. Configure Mode and Position Settings
 
 ```python
-set_control_mode(node, ControlMode.TRAJECTORY)
+# Set mode to Profile Position Mode (Trajectory)
+set_node_operation_mode(node, NodeOperationMode.TRAJECTORY)
 
-node.sdo["Position window"].raw = 5                  # Position window (0x6067)
-node.sdo["Position window time"].raw = 50            # Position window time (0x6068)
+# Set the position window parameters
+node.sdo["Position window"].raw = 10       # Position window (0x6067)
+node.sdo["Position window time"].raw = 50  # Position window time (0x6068)
 ```
 
 ### 3. Enable Operation
 
 ```python
-transition_402_cw_state(node, P402CWState.OPERATION_ENABLED)
+set_node_state(node, NodeState.OPERATION_ENABLED)
 ```
 
 ### 4. Send Position Commands
@@ -90,32 +97,50 @@ The `send_position_command()` function does the following:
 ### 5. Safely Disable the Drive
 
 ```python
-transition_402_cw_state(node, P402CWState.SWITCH_ON)
-transition_402_cw_state(node, P402CWState.READY_TO_SWITCH_ON)
+set_node_state(node, NodeState.SWITCH_ON)
+set_node_state(node, NodeState.READY_TO_SWITCH_ON)
 ```
 
 This powers off the drive while maintaining communication.
 
 ---
 
-## Summary Flow (Code-Level)
+## Executing a single motion cycle
 
+### 1. Prepare the controlword
 ```python
-transition_402_cw_state(node, P402CWState.SWITCH_ON_DISABLED)
-transition_402_cw_state(node, P402CWState.READY_TO_SWITCH_ON)
-transition_402_cw_state(node, P402CWState.SWITCH_ON)
+cw = 0x0F
+set_controlword(node, controlword=cw)
+```
 
-set_control_mode(node, ControlMode.TRAJECTORY)
-node.sdo["Position window"].raw = 5        # (0x6067)
-node.sdo["Position window time"].raw = 50  # (0x6068)
+### 2. Set the target position
+```python
+set_target_position(node, target_position=target_pos)
+```
 
-transition_402_cw_state(node, P402CWState.OPERATION_ENABLED)
+### 3. Start a motion by setting bit 4 in the controlword
+```python
+set_controlword(node, controlword=cw | BIT(4))
+```
 
-for pos in positions:
-    send_position_command(node, pos)
+### 4. Wait for the drive to acknowledge
+```python
+wait_for_statusword_flags(node, BIT(12))
+```
 
-transition_402_cw_state(node, P402CWState.SWITCH_ON)
-transition_402_cw_state(node, P402CWState.READY_TO_SWITCH_ON)
+### 5. Clear the start bit
+```python
+set_controlword(node, controlword=cw & ~BIT(4))
+```
+
+### 6. Wait until the target is reached
+```python
+wait_for_statusword_flags(node, BIT(10))
+```
+
+### 7. Read the actual position
+```python
+current_pos = get_actual_position(node)
 ```
 
 ---

@@ -51,47 +51,56 @@ You must reach `OPERATION ENABLED` before homing will start.
 ### 1. Initialize State Machine
 
 ```python
-transition_402_cw_state(node, P402CWState.SWITCH_ON_DISABLED)
-transition_402_cw_state(node, P402CWState.READY_TO_SWITCH_ON)
-transition_402_cw_state(node, P402CWState.SWITCH_ON)
+# Set CiA 402 State machine to SWITCH ON DISABLED
+set_node_state(node, NodeState.SWITCH_ON_DISABLED)
+
+# Set CiA 402 State machine to READY TO SWITCH ON
+set_node_state(node, NodeState.READY_TO_SWITCH_ON)
+
+# Set CiA 402 State machine to SWITCHED ON
+set_node_state(node, NodeState.SWITCH_ON)
 ```
 
 ### 2. Set Operation Mode to Homing
 
 ```python
-set_control_mode(node, ControlMode.HOMING)
-transition_402_cw_state(node, P402CWState.OPERATION_ENABLED)
+# Set mode to Homing
+set_node_operation_mode(node, NodeOperationMode.HOMING)
+
+# Set CiA 402 State machine to OPERATION ENABLED
+set_node_state(node, NodeState.OPERATION_ENABLED)
 ```
 
 ### 3. Configure Homing Parameters
 
 ```python
-node.sdo["Home offset"].raw = 0                             # Home offset (0x607C)
+# Set the homing offset
+node.sdo["Home offset"].raw = offset
 
 if direction_positive:
     method = HomingMethod.POS_INDEX
 else:
     method = HomingMethod.NEG_INDEX
 
-node.sdo["Homing method"].raw = method                      # Homing method (0x6098)
+node.sdo["Homing method"].raw = method
 ```
 
 ### 4. Trigger Homing
 
 ```python
-node.sdo["Controlword"].raw |= BIT(4)     # Set bit 4 to start homing
+set_controlword(node, 0x0F | BIT(4))      # Set bit 4 to start homing
 ```
 
 ### 5. Wait for Homing to Complete
 
 ```python
-wait_for_statusword_flags(node, BIT(12))                    # Bit 12 = homing attained
+wait_for_statusword_flags(node, BIT(12))  # Bit 12 = homing attained
 ```
 
 ### 6. Finalize
 
 ```python
-node.sdo["Controlword"].raw &= ~BIT(4)    # Clear bit 4
+set_controlword(node, 0x0F)               # Clear bit 4
 
 log.info(f"Node {node.id}: Homing completed")
 ```

@@ -17,6 +17,7 @@ import time
 from canopen import BaseNode402
 
 from config import NODE_ID
+
 from utils import setup_network, homing, configure_node
 
 # ----- Logging setup -----
@@ -28,6 +29,9 @@ logging.getLogger("canopen").setLevel(logging.WARNING)
 def main() -> None:
     """
     Entry point for executing the homing.
+
+    Returns:
+        None
     """
     try:
         network, absolute_path = setup_network()

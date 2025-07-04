@@ -40,6 +40,9 @@ CAN_INTERFACE = "slcan"
 
 # Channel (str): CAN channel (e.g., "COM3", "/dev/ttyACM0").
 CAN_CHANNEL = "COM3"
+
+# Encoder resolution
+ENC_RES = EncoderRes.ENC_RES_1MU
 ```
 
 ### 4. Run examples

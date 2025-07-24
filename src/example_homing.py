@@ -17,7 +17,6 @@ import time
 from canopen import BaseNode402
 
 from config import NODE_ID
-
 from utils import setup_network, homing, configure_node
 
 # ----- Logging setup -----

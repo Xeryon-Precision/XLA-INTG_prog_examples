@@ -15,7 +15,8 @@ from typing import Tuple
 from canopen import Network, BaseNode402
 
 from config import (
-    NodeOperationMode, EDS_PATH, CAN_INTERFACE, CAN_CHANNEL, CAN_DEFAULT_BITRATE, DEFAULT_TIMEOUT, NodeState, HomingMethod,
+    NodeOperationMode, EDS_PATH, CAN_INTERFACE, CAN_CHANNEL, CAN_DEFAULT_BITRATE, DEFAULT_TIMEOUT, NodeState,
+    HomingMethod,
     DEFAULT_BOOTUP_TIMEOUT, DEFAULT_SDO_TIMEOUT, NMTState
 )
 
@@ -24,6 +25,7 @@ from config import (
 # -----------------------------------------------------------------------------
 BIT = lambda n: 1 << n
 CLRBIT = lambda n: ~(1 << n)
+
 
 # -----------------------------------------------------------------------------
 # Node Functions
@@ -77,7 +79,9 @@ def configure_node(node: BaseNode402) -> None:
         None
     """
     node.nmt.state = NMTState.RESET
+
     node.nmt.wait_for_bootup(DEFAULT_BOOTUP_TIMEOUT)
+
     node.sdo.RESPONSE_TIMEOUT = DEFAULT_SDO_TIMEOUT
 
     log.info(f"Node {node.id}: Booted with state {node.nmt.state}")
@@ -124,6 +128,7 @@ def reset_node(node: BaseNode402) -> None:
     node.nmt.state = NMTState.RESET
     node.nmt.wait_for_bootup(DEFAULT_BOOTUP_TIMEOUT)
 
+
 def set_node_state(node: BaseNode402, state: NodeState, timeout: float = DEFAULT_TIMEOUT) -> None:
     """
     Transitions the device through the CiA 402 state machine using controlword updates,
@@ -148,12 +153,13 @@ def set_node_state(node: BaseNode402, state: NodeState, timeout: float = DEFAULT
     time_limit = time.monotonic() + timeout
     while time.monotonic() < time_limit:
         if node.state == state.value:
-            log.info( f"Node {node.id}: State = {node.state}")
+            log.info(f"Node {node.id}: State = {node.state}")
             return
 
         time.sleep(0.1)
 
     raise TimeoutError(f"Node {node.id}: Timeout while changing node state to '{state.value}'")
+
 
 def set_node_operation_mode(node: BaseNode402, mode: NodeOperationMode, timeout: float = DEFAULT_TIMEOUT) -> None:
     """
@@ -181,6 +187,7 @@ def set_node_operation_mode(node: BaseNode402, mode: NodeOperationMode, timeout:
         time.sleep(0.1)
 
     raise TimeoutError(f"Node {node.id}: Failed to confirm control mode '{mode.name}'")
+
 
 # -----------------------------------------------------------------------------
 # Statusword flags
@@ -223,6 +230,7 @@ def wait_for_statusword_flags(
         f"Node {node.id}: Timeout waiting for flags {flags:#06x} to be "
         f"{'set' if expected_flag_state else 'cleared'} in statusword."
     )
+
 
 # -----------------------------------------------------------------------------
 # PDOs

@@ -19,13 +19,10 @@ import time
 
 from canopen import BaseNode402
 
-from config import NodeOperationMode, NODE_ID, NodeState
-from src.config import INC_PER_MM
-from src.utils import get_actual_position
-
+from config import NodeOperationMode, NODE_ID, NodeState, INC_PER_MM
 from utils import (
     set_node_operation_mode, wait_for_statusword_flags, setup_network, BIT, set_node_state, homing, configure_node,
-    set_target_position, set_controlword
+    set_target_position, set_controlword, get_actual_position
 )
 
 # ----- Logging setup -----
@@ -67,7 +64,7 @@ def position_loop(node: BaseNode402) -> None:
 
     pos_1 = -10 * INC_PER_MM
     pos_2 = 10 * INC_PER_MM
-    step = 50 * INC_PER_MM
+    step = 5 * INC_PER_MM
 
     positions = list(range(pos_1, pos_2, step)) + list(range(pos_2, pos_1, -step))
     step_delay = 0.5

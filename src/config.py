@@ -13,13 +13,16 @@ from enum import IntEnum, IntFlag, unique, StrEnum
 
 from canopen.profiles.p402 import OperationMode
 
+
 # -----------------------------------------------------------------------------
 # Encoder resolution
 # -----------------------------------------------------------------------------
 @unique
 class EncoderRes(IntEnum):
-    ENC_RES_1MU = 1000      # XLA-5-X-1MU-INTG
-    ENC_RES_100NAN = 10000  # XLA-5-X-100NAN-INTG
+    ENC_RES_10MU = 100      # XLA-5-X-1MU-INTG      (10 µm resolution)
+    ENC_RES_1MU = 1000      # XLA-5-X-1MU-INTG      (1 µm resolution)
+    ENC_RES_250NAN = 4000   # XLA-5-X-1MU-INTG      (250 nm resolution)
+    ENC_RES_100NAN = 10000  # XLA-5-X-100NAN-INTG   (100 nm resolution)
 
 
 # -----------------------------------------------------------------------------
@@ -54,9 +57,8 @@ NODE_ID = 32
 # DEFAULT TIMEOUTS
 # -----------------------------------------------------------------------------
 DEFAULT_SDO_TIMEOUT = 10.0      # seconds
-DEFAULT_BOOTUP_TIMEOUT = 15.0     # seconds
+DEFAULT_BOOTUP_TIMEOUT = 15.0   # seconds
 DEFAULT_TIMEOUT = 15.0          # seconds
-
 
 # -----------------------------------------------------------------------------
 # Conversion factors
@@ -78,6 +80,7 @@ class CANBitrate(IntEnum):
     K500 = 500_000
     K800 = 800_000
     M1 = 1_000_000
+
 
 SUPPORTED_BITRATES = list(CANBitrate)
 CAN_DEFAULT_BITRATE = CANBitrate.K125

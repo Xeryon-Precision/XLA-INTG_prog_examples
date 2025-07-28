@@ -21,10 +21,9 @@ import logging
 from canopen import BaseNode402
 
 from config import (
-    NodeOperationMode,INC_PER_MM, LEDMask, NODE_ID, RESTORE_ALL_DEFAULT_PARAMETERS, DEFAULT_STATUS_LOGGING,
+    NodeOperationMode, INC_PER_MM, LEDMask, NODE_ID, RESTORE_ALL_DEFAULT_PARAMETERS, DEFAULT_STATUS_LOGGING,
     SAVE_ALL_PARAMETERS, ENC_RES, EncoderRes
 )
-
 from utils import setup_network, BIT, configure_node, reset_node
 
 # ----- Logging setup -----
@@ -143,7 +142,7 @@ def configure_motion_parameters(node: BaseNode402) -> None:
     log.info(f"Node {node.id}: Configuring motion parameters...")
 
     # Motor phase
-    node.sdo["Motor phase bounds"][1].raw = 0  # Minimum
+    node.sdo["Motor phase bounds"][1].raw = 0   # Minimum
     node.sdo["Motor phase bounds"][2].raw = 90  # Nominal
     node.sdo["Motor phase bounds"][3].raw = 90  # Maximum
 
@@ -153,18 +152,23 @@ def configure_motion_parameters(node: BaseNode402) -> None:
     node.sdo["Motor duty cycle bounds"][3].raw = 50  # Maximum
 
     # Trajectory parameters
-    node.sdo["Profile velocity"].raw = int(200 * INC_PER_MM)          # Target velocity (inc/s)      | 200 mm/s
-    node.sdo["Profile acceleration"].raw = int(1000 * INC_PER_MM)     # Target acceleration (inc/s²) | 1000 mm/s²
+    node.sdo["Profile velocity"].raw = int(200 * INC_PER_MM)           # Target velocity (inc/s)      | 200 mm/s
+    node.sdo["Profile acceleration"].raw = int(1000 * INC_PER_MM)      # Target acceleration (inc/s²) | 1000 mm/s²
 
     # Trajectory maximum limits
-    node.sdo["Max profile velocity"].raw = int(400 * INC_PER_MM)      # Max velocity (inc/s)         | 400 mm/s
-    node.sdo["Max acceleration"].raw = int(3000 * INC_PER_MM)         # Max acceleration (inc/s²)    | 3000 mm/s²
+    node.sdo["Max profile velocity"].raw = int(400 * INC_PER_MM)       # Max velocity (inc/s)         | 400 mm/s
+    node.sdo["Max acceleration"].raw = int(3000 * INC_PER_MM)          # Max acceleration (inc/s²)    | 3000 mm/s²
+
 
     # Trajectory profile jerk
     if ENC_RES == EncoderRes.ENC_RES_1MU:
-        node.sdo["Profile jerk"][1].raw = int(1_000_000 * INC_PER_MM) # Profile Jerk (inc/s³)        | 1_000_000 mm/s³
+        node.sdo["Profile jerk"][1].raw = int(1_000_000 * INC_PER_MM)  # Profile Jerk (inc/s³)        | 1_000_000 mm/s³
+    elif ENC_RES == EncoderRes.ENC_RES_2500NAN:
+        node.sdo["Profile jerk"][1].raw = int(0xFFFFFFFF)              # Profile Jerk (inc/s³)
     elif ENC_RES == EncoderRes.ENC_RES_100NAN:
-        node.sdo["Profile jerk"][1].raw = int(0xFFFFFFFF)             # Profile Jerk (inc/s³)
+        node.sdo["Profile jerk"][1].raw = int(0xFFFFFFFF)              # Profile Jerk (inc/s³)
+    else:
+        node.sdo["Profile jerk"][1].raw = int(1_000_000 * INC_PER_MM)  # Profile Jerk (inc/s³)        | 1_000_000 mm/s³
 
     # Software position limits
     node.sdo["Software position limit"][1].raw = 0  # Min position limit (0 = disabled)

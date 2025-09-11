@@ -1,105 +1,155 @@
 # Xeryon CANopen Example
 
-This repository provides structured examples for working with CiA 402-compliant devices from Xeryon over CANopen. It includes modular scripts for configuration, homing, and profile position movement.
+This repository provides examples for working with CiA 402-compliant devices from Xeryon over CANopen. The repository includes installation instructions, communication setup, and Python programming examples for motion control.
+
+## Table of Contents
+
+* [Wiring](#wiring)
+* [Installation](#installation)
+* [Quick Start](#quick-start)
+* [Documentation](#documentation)
+* [Project Structure](#project-structure)
+* [FAQ](#faq)
 
 ## Wiring
 
-Before proceeding, please refer to the wiring diagram for the correct setup.
+> ⚠️ **Safety Warning:**
+> Always disconnect power before wiring. Incorrect wiring while powered can damage the device.
 
-For this demo, we use the **Fysetc UCAN** USB-to-CAN adapter. However, you are free to use any compatible USB-to-CAN device.
+Before proceeding, please refer to the wiring diagram for the correct setup. The wiring involves connecting the breakout board, STO, and power supply to the motor and CAN adapter.
 
-Alternatively, you can also use a microcontroller or any other device that supports CAN communication.
+We use the **Fysetc UCAN** USB-to-CAN adapter. However, you are free to use any compatible USB-to-CAN device. 
 
-<img src="img/XLA-INTG-CTRL_wiring_diagram.jpg" alt="Wiring Diagram" style="border-radius: 10px; width: 100%; max-width: 1000px;" />
+### Wiring Steps
 
----
+1. Ensure that the device is powered off and the power plug is disconnected.
+2. Connect the FFC cable to the XLA. ([Wiring example](docs/wiring.md))
+3. Connect the FFC cable to the breakout board.
+4. Connect the STO (Safe Torque Off) pin to the 3.3V on the breakout board.
+5. Connect the power cables to the screw terminals.
+6. Verify that all connections are secure and correctly placed.
+7. Connect power and switch on the power supply.
+
+> **Note:** No LEDs will be on when the device is powered
+
+<img src="img/XLA-INTG-CTRL_wiring_diagram.jpg" alt="Wiring Diagram" style="border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2);" />
 
 ## Installation
 
-Before running any scripts, install the required Python packages:
+### 1. Python
 
-### 1. Install dependencies
+Make sure Python 3.12 or higher is installed before continuing.
+
+### 2. Install dependencies
+
+You can install the requirements by running this command in the CMD.
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Interface Compatibility
+### 3. Open the examples directory
 
-Ensure your hardware (e.g., USB-to-CAN dongle) is connected and supported by your system:
+Make sure that you are are in the directory `examples`
+
+```bash
+cd examples
+```
+
+### 4. Interface Compatibility
+
+Ensure your hardware (e.g., USB-to-CAN) is connected and supported by your system:
 
 * For Linux `socketcan`: ensure kernel CAN drivers are loaded
 
-### 3. Change `config.py`
+### 5. Change `settings.py`
 
-To configure the CAN interface and channel for your platform, open `config.py` and update the following values:
+To configure the CAN interface and channel for your platform, open `settings.py` and update the following values:
 
 ```python
+# Encoder resolution
+ENC_RES = EncoderRes.ENC_RES_1MU
+
+# Default Node ID is 32
+NODE_ID = 32
+
 # Interface (str): Interface type (e.g., "slcan", "socketcan").
 CAN_INTERFACE = "slcan"
 
-# Channel (str): CAN channel (e.g., "COM3", "/dev/ttyACM0").
+# Channel (str): CAN channel (e.g., "COM3", "/dev/ttyACM0", "can0").
 CAN_CHANNEL = "COM3"
 
-# Encoder resolution
-ENC_RES = EncoderRes.ENC_RES_1MU
-```
+# Default bitrate is 125kbps
+CAN_BITRATE = CANBitrate.K125
 
-### 4. Run examples
-
-Once configured, you can run any of the example files to test communication or functionality:
-
-```python
-python example_<name>.py
-```
-
----
-
-## File Structure and Purpose
-
-| File                              | Description                                                                                                            |
-|-----------------------------------|------------------------------------------------------------------------------------------------------------------------|
-| `src/example_configure.py`        | Configures the device: I/O, logging, motion profiles, and saves to flash                                               |
-| `src/example_homing.py`           | Executes a homing procedure using configured parameters.                                                               |
-| `src/example_profile_position.py` | Executes a homing procedure using configured parameters,<br>sends target positions using CiA 402 Profile Position mode |
-| `src/utils.py`                    | Reusable utility functions                                                                                             |
-| `src/config.py`                   | Used for configuration and Enum constants                                                                              |
-| `eds/xeryon_xla_5_eds.eds`        | EDS File                                                                                                               |
-| `eds/xeryon_xla_5_eds_docu.txt`   | Human-readable documentation of EDS fields                                                                             |
-| `requirements.txt`                | Package requirements for Python environment setup                                                                      |
-
----
-
-## READMEs
-
-| Guide Type                                            | Description                         |
-|-------------------------------------------------------|-------------------------------------|
-| [Configuration](./README_configuration.md)            | How to set parameters and save them |
-| [Homing](./README_homing.md)                          | How to execute a homing operation   |
-| [Profile Position mode](./README_profile_position.md) | Sending Profile Position commands   |
-
----
-
-## EDS File and eds_docu.txt
-
-### What is an EDS?
-
-An EDS (Electronic Data Sheet) is a standardized INI-style file that describes the object dictionary of a CANopen device. It is required for correct SDO access and symbolic mapping of object names.
-
-### What is `eds_docu.txt`?
-
-This is a human-readable reference exported from the EDS for easier debugging and script development. It includes:
-
-* Object indexes
-* Subindex descriptions
-* Access types and data types
-
-### Where do I configure it?
-
-The path to your `.eds` file is set in `config.py` as `EDS_PATH`:
-
-```python
+# Filename of the EDS file
 EDS_PATH = "../eds/xeryon_xla_5_eds.eds"
 ```
 
-Make sure the actual `.eds` file is present or update the path accordingly in `src/config.py`.
+## Quick Start
+
+To quickly verify your setup, run the configuration example:
+
+```bash
+python configuration.py
+```
+
+This will configure all the configuration settings to the default values. 
+An error will occur when there is a communication issue.
+(Ensure you have updated `settings.py` with your CAN interface details first.)
+
+You can also run other examples:
+
+```bash
+python <filename>.py
+```
+
+## Documentation
+
+These are detailed guides on how to configure, home, and perform motion with the motor:
+
+| Guide Type                                             | Description                             |
+| ------------------------------------------------------ | --------------------------------------- |
+| [Configuration](docs/configuration.md)                 | How to set parameters and save them     |
+| [Homing](docs/homing.md)                               | How to execute a homing operation       |
+| [Profile Position mode](docs/mode_profile_position.md) | How to use profile position mode        |
+| [Daisy Chaining](docs/daisy_chaining.md)                        | How to use daisy chaining               |
+| [Wiring example](docs/wiring.md)                       | Wiring example                          |
+| [EDS](docs/eds.md)                                      | EDS file information                    |
+| [FAQ](FAQ.md)                                          | Frequently asked questions              |
+
+## Project Structure
+
+```
+.
+├── docs/
+│   ├── configuration.md              # Guide for configuration                             
+│   ├── daisy_chaining.md             # Guide for daisy chaining
+│   ├── eds.md                        # Information about EDS
+│   ├── homing.md                     # Guide for homing
+│   ├── mode_profile_position.md      # Guide for mode profile position
+│   └── wiring.md                     # Wiring example
+│   
+├── eds/
+│   ├── xeryon_xla_5_eds.eds          # EDS file
+│   └── xeryon_xla_5_eds_docu.txt     # Documentation of EDS fields
+│   
+├── examples/                         # Code Examples
+│   ├── daisy_chaining_configuration
+│   │   ├── change_node_id_all.py     # Example to automatically reassign all Node IDs
+│   │   └── change_node_id_single.py  # Example to change Node ID of specific node
+│   │
+│   ├── configuration.py              # Example script for configuration
+│   ├── homing.py                     # Example script for homing
+│   └── mode_profile_position.py      # Example script for mode profile position
+│
+├── FAQ.md                            # Frequently asked questions
+├── README.md                         # General Guide for running the examples
+└── requirements.txt                  # Dependency file for python setup
+```
+
+## FAQ
+
+Please refer to [FAQ](FAQ.md) for a complete list of common questions and answers.
+
+

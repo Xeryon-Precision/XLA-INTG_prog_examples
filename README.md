@@ -113,9 +113,10 @@ These are detailed guides on how to configure, home, and perform motion with the
 | [Configuration](docs/configuration.md)                 | How to set parameters and save them     |
 | [Homing](docs/homing.md)                               | How to execute a homing operation       |
 | [Profile Position mode](docs/mode_profile_position.md) | How to use profile position mode        |
-| [Daisy Chaining](docs/daisy_chaining.md)                        | How to use daisy chaining               |
+| [Daisy Chaining](docs/daisy_chaining.md)               | How to use daisy chaining               |
 | [Wiring example](docs/wiring.md)                       | Wiring example                          |
-| [EDS](docs/eds.md)                                      | EDS file information                    |
+| [CANopen documentation](https://xeryon.com/wp-content/uploads/2025/08/CANopen-Introduction.pdf)                         | CANopen introduction manual      |
+| [EDS](docs/eds.md)                                     | EDS file information                    |
 | [FAQ](FAQ.md)                                          | Frequently asked questions              |
 
 ## Project Structure

@@ -18,6 +18,7 @@ import time
 from canopen import BaseNode402
 
 from common.utils import setup_network, homing, configure_node
+from settings import NODE_ID
 
 # ----- Logging setup -----
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -36,7 +37,7 @@ def main() -> None:
         network, absolute_path = setup_network()
         network.check()
 
-        node = BaseNode402(32, absolute_path)
+        node = BaseNode402(NODE_ID, absolute_path)
         network.add_node(node)
 
         configure_node(node)

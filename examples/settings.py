@@ -48,7 +48,7 @@ CAN_INTERFACE = "slcan"
 CAN_CHANNEL = "COM3"
 
 # Default bitrate is 125kbps
-CAN_BITRATE = CANBitrate.K125
+CAN_BITRATE = CANBitrate.BITRATE_125K
 
 # Filename of the EDS file
 EDS_PATH = "../eds/xeryon_xla_5_eds.eds"
@@ -56,9 +56,9 @@ EDS_PATH = "../eds/xeryon_xla_5_eds.eds"
 # -----------------------------------------------------------------------------
 # Default timeouts
 # -----------------------------------------------------------------------------
-DEFAULT_SDO_TIMEOUT = 15.0      # seconds
-DEFAULT_BOOTUP_TIMEOUT = 15.0   # seconds
-DEFAULT_TIMEOUT = 15.0          # seconds
+DEFAULT_SDO_TIMEOUT = 5.0      # seconds
+DEFAULT_BOOTUP_TIMEOUT = 3.0   # seconds
+DEFAULT_TIMEOUT = 15.0         # seconds
 
 # -----------------------------------------------------------------------------
 # Conversion factors

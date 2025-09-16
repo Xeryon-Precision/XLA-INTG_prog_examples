@@ -62,7 +62,7 @@ node.sdo["Profile jerk"][1].raw      = 1_000_000 * INC_PER_MM  # Profile Jerk (i
 ### 6. Configure Homing Settings
 
 ```python
-node.sdo["Home offset"].raw = 0
+node.sdo["Home offset"].raw = 0                 # Homing offset in inc
 node.sdo["Homing parameters"][1].raw = 250      # Step size
 node.sdo["Homing parameters"][2].raw = 2        # Tolerance
 node.sdo["Homing parameters"][3].raw = 100      # Time (ms)

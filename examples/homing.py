@@ -17,7 +17,7 @@ import time
 
 from canopen import BaseNode402
 
-from common.utils import setup_network, homing, configure_node
+from common.utils import setup_network, homing, configure_node, error_handler
 from settings import NODE_ID
 
 # ----- Logging setup -----
@@ -33,6 +33,7 @@ def main() -> None:
     Returns:
         None
     """
+    network = None
     try:
         network, absolute_path = setup_network()
         network.check()
@@ -44,6 +45,15 @@ def main() -> None:
 
         time.sleep(1)
 
+        # Configure homing parameters (temporary — not stored on the device).
+        # Arguments:
+        #   direction_positive (bool): True = positive direction, False = negative.
+        #   offset (int): Optional homing offset in counts (not persistent).
+        #
+        # Example (with custom offset):
+        #   homing(node, direction_positive=True, offset=2000)
+        #
+        # Without arguments, uses existing device settings:
         homing(node)
         
         network.disconnect()
@@ -53,7 +63,11 @@ def main() -> None:
         pass
 
     except Exception as e:
-        log.error(f"Error occured: {e}")
+        error_handler(e)
+
+    finally:
+        if network:
+            network.disconnect()
 
 
 if __name__ == "__main__":

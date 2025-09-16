@@ -1,5 +1,5 @@
 """
-test_communication.py
+verify_communication.py
 
 This script verifies communication with a CANopen node.
 
@@ -26,9 +26,13 @@ sys.path.insert(0, project_root)
 import logging
 
 from canopen import BaseNode402, nmt
-from settings import NODE_ID
 
-from common.utils import setup_network
+try:
+    from settings import NODE_ID
+    from common.utils import setup_network
+except ImportError:
+    from examples.settings import NODE_ID
+    from examples.common.utils import setup_network
 
 # ----- Logging setup -----
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -47,6 +51,7 @@ def main() -> None:
         On success:
             [INFO] Node 32: Communication successful.
     """
+    network = None
     try:
         network, eds_path = setup_network()
         node = BaseNode402(NODE_ID, eds_path)
@@ -63,8 +68,8 @@ def main() -> None:
         log.info("Keyboard interrupt detected, stopping program..")
         pass
 
-    except nmt.NmtError as e:
-        log.error(f"Failed to connect to Node {node.id}")
+    except nmt.NmtError:
+        log.error(f"Failed to connect to Node")
         pass
 
     except Exception as e:

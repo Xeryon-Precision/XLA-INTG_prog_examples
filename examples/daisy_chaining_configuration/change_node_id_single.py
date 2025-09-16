@@ -36,8 +36,12 @@ import logging
 
 from canopen import Network
 
-from common.utils import lss_configure_single_node_id
-from settings import CAN_BITRATE, CAN_CHANNEL, CAN_INTERFACE, EDS_PATH
+try:
+    from common.utils import lss_configure_single_node_id
+    from settings import CAN_BITRATE, CAN_CHANNEL, CAN_INTERFACE, EDS_PATH
+except ImportError:
+    from examples.common.utils import lss_configure_single_node_id
+    from examples.settings import CAN_BITRATE, CAN_CHANNEL, CAN_INTERFACE, EDS_PATH
 
 # ---- Configuration ----------------------------------------------------------------
 NODE_ID     = 32                 # Current (known) Node ID on the bus
@@ -49,7 +53,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 log = logging.getLogger(__name__)
 logging.getLogger("canopen").setLevel(logging.WARNING)
 
-def main() -> int:
+def main():
     """
     Main execution function for the LSS configuration example to change a single Node ID.
     

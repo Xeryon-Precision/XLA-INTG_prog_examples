@@ -23,7 +23,7 @@ from canopen import BaseNode402
 from common.parameters import NodeOperationMode, NodeState
 from common.utils import (
     set_node_operation_mode, wait_for_statusword_flags, setup_network, BIT, set_node_state, homing, configure_node,
-    set_target_position, set_controlword, get_actual_position
+    set_target_position, set_controlword, get_actual_position, error_handler
 )
 from settings import NODE_ID, INC_PER_MM
 
@@ -139,6 +139,7 @@ def main() -> None:
     Returns:
         None
     """
+    network = None
     try:
         network, absolute_path = setup_network()
         network.check()
@@ -155,15 +156,17 @@ def main() -> None:
         time.sleep(1)
 
         position_loop(node)
-        
-        network.disconnect()
 
     except KeyboardInterrupt:
         log.info("Keyboard interrupt detected, stopping program..")
         pass
 
     except Exception as e:
-        log.error(f"Error occured: {e}")
+        error_handler(e)
+
+    finally:
+        if network:
+            network.disconnect()
 
 
 if __name__ == "__main__":

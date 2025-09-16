@@ -81,8 +81,8 @@ CAN_INTERFACE = "slcan"
 # Channel (str): CAN channel (e.g., "COM3", "/dev/ttyACM0", "can0").
 CAN_CHANNEL = "COM3"
 
-# Default bitrate is 125kbps
-CAN_BITRATE = CANBitrate.K125
+# Default bitrate is 125Kbps
+CAN_BITRATE = CANBitrate.BITRATE_125k
 
 # Filename of the EDS file
 EDS_PATH = "../eds/xeryon_xla_5_eds.eds"
@@ -90,15 +90,21 @@ EDS_PATH = "../eds/xeryon_xla_5_eds.eds"
 
 ## Quick Start
 
-To quickly verify your setup, run the configuration example:
+Ensure you have updated `settings.py` with your CAN interface details first. <br>
+To quickly verify the communication of your setup, run:
+
+```bash
+python tests/verify_communication.py
+```
+
+To configure the device and save the parameters, run:
 
 ```bash
 python configuration.py
 ```
 
-This will configure all the configuration settings to the default values. 
+This will configure all the configuration settings to the (default) values. 
 An error will occur when there is a communication issue.
-(Ensure you have updated `settings.py` with your CAN interface details first.)
 
 You can also run other examples:
 
@@ -138,9 +144,16 @@ These are detailed guides on how to configure, home, and perform motion with the
 │   └── xeryon_xla_5_eds_docu.txt     # Documentation of EDS fields
 │   
 ├── examples/                         # Code Examples
-│   ├── daisy_chaining_configuration
+│   ├── common/
+│   │   ├── parameters.py             # Hardcoded parameters, values and enums
+│   │   └── utils.py                  # Shared functions
+│   │
+│   ├── daisy_chaining_configuration/
 │   │   ├── change_node_id_all.py     # Example to automatically reassign all Node IDs
 │   │   └── change_node_id_single.py  # Example to change Node ID of specific node
+│   │
+│   ├── tests/
+│   │   └── verify_communication.py   # Script to verify the communication of a node
 │   │
 │   ├── configuration.py              # Example script for configuration
 │   ├── homing.py                     # Example script for homing

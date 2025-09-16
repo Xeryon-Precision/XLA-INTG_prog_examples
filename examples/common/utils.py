@@ -10,17 +10,29 @@ CANopen devices.
 import logging as log
 import os
 import time
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 
-from canopen import Network, BaseNode402
+from can import CanError
+from canopen import Network, BaseNode402, SdoAbortedError
 from canopen.lss import LssError
-from common.parameters import (
-    NodeOperationMode, HomingMethod, NodeState, NMTState, LSS_SCAN_DELAY, LSS_RESET_DELAY, LSS_UNCONFIGURED_NODE_ID
-)
-from settings import (
-    EDS_PATH, CAN_INTERFACE, CAN_CHANNEL, CAN_BITRATE, DEFAULT_TIMEOUT,
-    DEFAULT_BOOTUP_TIMEOUT, DEFAULT_SDO_TIMEOUT
-)
+from canopen.nmt import NmtError
+
+try:
+    from common.parameters import (
+        NodeOperationMode, HomingMethod, NodeState, NMTState, LSS_SCAN_DELAY, LSS_RESET_DELAY, LSS_UNCONFIGURED_NODE_ID
+    )
+    from settings import (
+        EDS_PATH, CAN_INTERFACE, CAN_CHANNEL, CAN_BITRATE, DEFAULT_TIMEOUT,
+        DEFAULT_BOOTUP_TIMEOUT, DEFAULT_SDO_TIMEOUT
+    )
+except ImportError:
+    from examples.common.parameters import (
+        NodeOperationMode, HomingMethod, NodeState, NMTState, LSS_SCAN_DELAY, LSS_RESET_DELAY, LSS_UNCONFIGURED_NODE_ID
+    )
+    from examples.settings import (
+        EDS_PATH, CAN_INTERFACE, CAN_CHANNEL, CAN_BITRATE, DEFAULT_TIMEOUT,
+        DEFAULT_BOOTUP_TIMEOUT, DEFAULT_SDO_TIMEOUT
+    )
 
 # -----------------------------------------------------------------------------
 # Bit manipulation utilities
@@ -330,14 +342,14 @@ def get_target_position(node: BaseNode402) -> int:
 # -----------------------------------------------------------------------------
 # Homing
 # -----------------------------------------------------------------------------
-def homing(node: BaseNode402, direction_positive: bool = True, offset: int = 0) -> None:
+def homing(node: BaseNode402, direction_positive: bool = True, offset: Optional[int] = None) -> None:
     """
     Performs a homing operation using the configured homing method.
 
     Args:
         node (BaseNode402): The CANopen device node.
         direction_positive (bool): True = Homing method to use is positive index, otherwise negative.
-        offset (int): The homing offset to set in counts.
+        offset ( Optional[int]): The homing offset to set in counts, or None if the stored parameter is used.
 
     Raises:
         RuntimeError: If the homing failed to be attained.
@@ -359,11 +371,9 @@ def homing(node: BaseNode402, direction_positive: bool = True, offset: int = 0) 
     # Set mode to Homing
     set_node_operation_mode(node, NodeOperationMode.HOMING)
 
-    # Set CiA 402 State machine to OPERATION ENABLED
-    set_node_state(node, NodeState.OPERATION_ENABLED)
-
     # Set the homing offset
-    node.sdo["Home offset"].raw = offset
+    if offset is not None:
+        node.sdo["Home offset"].raw = offset
 
     if direction_positive:
         method = HomingMethod.POS_INDEX
@@ -371,6 +381,9 @@ def homing(node: BaseNode402, direction_positive: bool = True, offset: int = 0) 
         method = HomingMethod.NEG_INDEX
 
     node.sdo["Homing method"].raw = method
+
+    # Set CiA 402 State machine to OPERATION ENABLED
+    set_node_state(node, NodeState.OPERATION_ENABLED)
 
     # Start homing (set bit 4)
     log.info(f"Node {node.id}: Starting homing with method {method}")
@@ -400,18 +413,17 @@ def homing(node: BaseNode402, direction_positive: bool = True, offset: int = 0) 
 # -----------------------------------------------------------------------------
 # LSS
 # -----------------------------------------------------------------------------
-def lss_check_configured_nodes(network: Network) -> List[int]:
+def lss_check_configured_nodes(network: Network):
     """
     Check for currently configured nodes on the network.
     
     Args:
-        network: CANopen network instance
+        network (Network): CANopen network instance
         
     Returns:
         List of configured node IDs
     """
-    
-    # Switch all nodes to configuration state
+
     network.lss.send_switch_state_global(network.lss.CONFIGURATION_STATE)
     
     try:
@@ -428,37 +440,32 @@ def lss_check_configured_nodes(network: Network) -> List[int]:
         return []
         
     finally:
-        # Return to waiting state
         network.lss.send_switch_state_global(network.lss.WAITING_STATE)
 
 
-def lss_unconfigure_all_nodes(network: Network) -> bool:
+def lss_unconfigure_all_nodes(network: Network):
     """
     Unconfigure all nodes by setting their IDs to 0xFF.
     
     Args:
-        network: CANopen network instance
+        network (Network): CANopen network instance
         
     Returns:
         True if successful, False if errors occurred
     """
     log.info("Unconfiguring all nodes...")
-    
-    # Switch to configuration state
+
     network.lss.send_switch_state_global(network.lss.CONFIGURATION_STATE)
     
     try:
-        # Set all node IDs to unconfigured (0xFF)
         network.lss.configure_node_id(LSS_UNCONFIGURED_NODE_ID)
         log.debug(f"Set all node IDs to {LSS_UNCONFIGURED_NODE_ID:#02x}")
-        
-        # Try to store configuration
+
         try:
             network.lss.store_configuration()
             log.debug("Configuration stored")
         except Exception as e:
             log.warning(f"Could not store configuration: {e}")
-            # Continue - some devices don't support storing
             
         return True
         
@@ -468,21 +475,20 @@ def lss_unconfigure_all_nodes(network: Network) -> bool:
         return False
         
     finally:
-        # Return to waiting state
         network.lss.send_switch_state_global(network.lss.WAITING_STATE)
-        
-        # Apply changes
+
         log.info(f"Sending NMT command: 'RESET COMMUNICATION'")
         network.nmt.state = 'RESET COMMUNICATION'
         time.sleep(LSS_RESET_DELAY)
 
 
-def lss_scan_and_configure_nodes(network: Network, first_node_id) -> List[dict]:
+def lss_scan_and_configure_nodes(network: Network, first_node_id: int) -> List[dict]:
     """
     Scan for unconfigured nodes and assign sequential node IDs.
     
     Args:
-        network: CANopen network instance
+        network (Network): CANopen network instance
+        first_node_id (int): First Node ID to assign
         
     Returns:
         List of dictionaries containing device information and assigned IDs
@@ -493,19 +499,16 @@ def lss_scan_and_configure_nodes(network: Network, first_node_id) -> List[dict]:
     current_node_id = first_node_id
     
     while True:
-        # Ensure all nodes are in waiting state
         network.lss.send_switch_state_global(network.lss.WAITING_STATE)
         time.sleep(LSS_SCAN_DELAY)
-        
-        # Perform fast scan
+
         try:
             found, device_info = network.lss.fast_scan()
             
             if not found:
                 log.info("No more unconfigured nodes found")
                 break
-                
-            # Extract device information
+
             vendor_id, product_code, revision, serial = device_info
             
             device = {
@@ -519,8 +522,7 @@ def lss_scan_and_configure_nodes(network: Network, first_node_id) -> List[dict]:
             log.info(f"Found device: Vendor={vendor_id:#06x}, "
                        f"Product={product_code:#06x}, "
                        f"Serial={serial:#010x}")
-            
-            # Configure the node with new ID
+
             log.info(f"Assigning node ID {current_node_id}...")
             
             network.lss.configure_node_id(current_node_id)
@@ -538,8 +540,14 @@ def lss_scan_and_configure_nodes(network: Network, first_node_id) -> List[dict]:
 
 def lss_read_identity_via_sdo(node: BaseNode402) -> tuple[int, int, int, int]:
     """
-    Returns (vendor_id, product_code, revision_number, serial_number) from 0x1018.
-    Tries named entries first, falls back to raw indices.
+    Reads the LSS identity by SDO commands
+
+    Args:
+        node (BaseNode402): The CANopen device node.
+
+    Returns:
+        Returns (vendor_id, product_code, revision_number, serial_number) from 0x1018.
+        Tries named entries first, falls back to raw indices.
     """
     try:
         ident = node.sdo["Identity Object"] 
@@ -557,7 +565,7 @@ def lss_read_identity_via_sdo(node: BaseNode402) -> tuple[int, int, int, int]:
         return vendor_id, product_code, revision_number, serial_number
 
 
-def lss_configure_single_node_id(network: Network, node_id: int, new_node_id:int) -> int:
+def lss_configure_single_node_id(network: Network, node_id: int, new_node_id:int):
     """
     Changes the CANopen Node ID of a single device using LSS selective mode.
     
@@ -639,3 +647,54 @@ def lss_configure_single_node_id(network: Network, node_id: int, new_node_id:int
 
     log.info(f"Done. The device should now respond on Node ID {new_node_id}.")
     return 0
+
+
+# -----------------------------------------------------------------------------
+# ERRORS
+# -----------------------------------------------------------------------------
+def error_handler(exc: Exception, rethrow: bool = False) -> None:
+    """
+    Handles common CANopen / python-can exceptions with user-friendly messages.
+
+    Args:
+        exc (Exception):
+        rethrow (bool):
+
+    Returns:
+        Optionally rethrows the exception after logging.
+    """
+    if isinstance(exc, SdoAbortedError):
+        log.error(f"SDO transfer aborted: {exc}")
+
+    elif isinstance(exc, LssError):
+        log.error(f"LSS error during node discovery/configuration. \n {exc}")
+
+    elif isinstance(exc, NmtError):
+        msg = str(exc)
+        if "Timeout waiting for boot-up message" in msg:
+            log.error(
+                "Timeout waiting for boot-up message.\n"
+                "• Check the wiring and verify that the device is powered on.\n"
+                "• Ensure that the configuration in settings.py (baudrate, channel, interface, node ID, etc.) "
+                "matches the device and network."
+            )
+        else:
+            log.error(f"NMT state transition failed: {msg}")
+
+    elif isinstance(exc, CanError):
+        log.error(f"CAN interface error — check interface name, drivers, and bus wiring. \n {exc}")
+
+    elif isinstance(exc, TimeoutError):
+        log.error(f"Operation timed out. Device may be offline or not responding. \n {exc}")
+
+    elif isinstance(exc, FileNotFoundError):
+        log.error(f"Device not found — check your CAN interface path.")
+
+    elif isinstance(exc, ConnectionError):
+        log.error(f"Failed to connect to CAN interface or gateway.")
+
+    else:
+        log.error(f"{exc.__class__.__name__}: {exc}")
+
+    if rethrow:
+        raise exc

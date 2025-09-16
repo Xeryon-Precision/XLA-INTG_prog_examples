@@ -159,4 +159,3 @@ current_pos = get_actual_position(node)
 | Position window time       | 0x6068 | Time the window must be valid |
 
 ---
-

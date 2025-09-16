@@ -50,9 +50,14 @@ import time
 
 from canopen import Network
 
-from common.utils import lss_check_configured_nodes, lss_scan_and_configure_nodes, lss_unconfigure_all_nodes
-from common.parameters import LSS_RESET_DELAY
-from settings import CAN_BITRATE, CAN_CHANNEL, CAN_INTERFACE
+try:
+    from common.utils import lss_check_configured_nodes, lss_scan_and_configure_nodes, lss_unconfigure_all_nodes
+    from common.parameters import LSS_RESET_DELAY
+    from settings import CAN_BITRATE, CAN_CHANNEL, CAN_INTERFACE
+except ImportError:
+    from examples.common.utils import lss_check_configured_nodes, lss_scan_and_configure_nodes, lss_unconfigure_all_nodes
+    from examples.common.parameters import LSS_RESET_DELAY
+    from examples.settings import CAN_BITRATE, CAN_CHANNEL, CAN_INTERFACE
 
 # ---- Configuration ----------------------------------------------------------------
 START_NODE_ID = 32              # The starting Node ID

@@ -64,13 +64,11 @@ set_node_state(node, NodeState.SWITCH_ON)
 ```python
 # Set mode to Homing
 set_node_operation_mode(node, NodeOperationMode.HOMING)
-
-# Set CiA 402 State machine to OPERATION ENABLED
-set_node_state(node, NodeState.OPERATION_ENABLED)
 ```
 
 ### 3. Configure Homing Parameters
-
+These parameters are temporary, it is not stored in the device.<br>
+If you want to store the homing offset so it persists after a power cycle, see `configuration.py`
 ```python
 # Set the homing offset
 node.sdo["Home offset"].raw = offset
@@ -86,6 +84,9 @@ node.sdo["Homing method"].raw = method
 ### 4. Trigger Homing
 
 ```python
+# Set CiA 402 State machine to OPERATION ENABLED
+set_node_state(node, NodeState.OPERATION_ENABLED)
+
 set_controlword(node, 0x0F | BIT(4))      # Set bit 4 to start homing
 ```
 
@@ -120,7 +121,6 @@ log.info(f"Node {node.id}: Homing completed")
 
 ## Notes
 
-* Do not set homing parameters while in OPERATION ENABLED..
 * Once homed, transition to another mode (e.g. PROFILE\_POSITION) before continuing.
 * If homing offset is set, move to position 0 using PROFILE\_POSITION to move the device to the offset.
 * Always check bit 12 in Statusword (0x6041) to confirm homing completion.

@@ -23,16 +23,15 @@ class EncoderRes(IntEnum):
 # -----------------------------------------------------------------------------
 # CAN bitrates
 # -----------------------------------------------------------------------------
-@unique
 class CANBitrate(IntEnum):
-    K10 = 10_000
-    K20 = 20_000
-    K50 = 50_000
-    K125 = 125_000
-    K250 = 250_000
-    K500 = 500_000
-    K800 = 800_000
-    M1 = 1_000_000
+    BITRATE_10K = 10_000
+    BITRATE_20K = 20_000
+    BITRATE_50K = 50_000
+    BITRATE_125K = 125_000     # Default
+    BITRATE_250K = 250_000
+    BITRATE_500K = 500_000
+    BITRATE_800K = 800_000
+    BITRATE_1000K = 1_000_000
 
 
 SUPPORTED_BITRATES = list(CANBitrate)

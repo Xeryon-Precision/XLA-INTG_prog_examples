@@ -25,10 +25,8 @@ from common.parameters import (
     NodeOperationMode, LEDMask, RESTORE_ALL_DEFAULT_PARAMETERS, DEFAULT_STATUS_LOGGING,
     SAVE_ALL_PARAMETERS, EncoderRes
 )
-from common.utils import setup_network, BIT, configure_node, reset_node
-from settings import (
-    INC_PER_MM, NODE_ID, ENC_RES
-)
+from common.utils import setup_network, BIT, configure_node, reset_node, error_handler
+from settings import INC_PER_MM, NODE_ID, ENC_RES
 
 # ----- Logging setup -----
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -227,6 +225,7 @@ def main() -> None:
     Returns:
         None
     """
+    network = None
     try:
         network, eds_path = setup_network()
         node = BaseNode402(NODE_ID, eds_path)
@@ -259,8 +258,11 @@ def main() -> None:
         pass
 
     except Exception as e:
-        log.error(f"Error occured: {e}")
-        raise e
+        error_handler(e)
+
+    finally:
+        if network:
+            network.disconnect()
 
 
 if __name__ == "__main__":

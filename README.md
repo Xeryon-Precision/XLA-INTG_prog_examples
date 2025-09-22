@@ -34,11 +34,15 @@ We use the **Fysetc UCAN** USB-to-CAN adapter. However, you are free to use any 
 
 <img src="img/XLA-INTG-CTRL_wiring_diagram.jpg" alt="Wiring Diagram" style="border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2);" />
 
-## Installation
+## Software Installation
 
-### 1. Python
+### 1. Requirements
 
-Make sure Python 3.12 or higher is installed before continuing.
+- **[Python 3.12 or higher](https://www.python.org/downloads/)** must be installed before continuing.  
+- **[Visual Studio Code](https://code.visualstudio.com/)** recommended as the code editor.  
+- **[Visual Studio Code Python Extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python)** optional, but helpful when working with Python files.  
+
+
 
 ### 2. Install dependencies
 

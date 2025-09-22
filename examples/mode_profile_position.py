@@ -84,6 +84,8 @@ def position_loop(node: BaseNode402) -> None:
             if err_count >= 2:
                 log.error(f"Node {node.id}: Stopping loop after 2 consecutive errors.")
                 break
+    
+    time.sleep(5)
 
     # Turn off the device after finishing the position loop
     # Set CiA 402 State machine to SWITCHED ON

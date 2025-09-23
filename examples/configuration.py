@@ -165,7 +165,7 @@ def configure_motion_parameters(node: BaseNode402) -> None:
     # Trajectory profile jerk
     if ENC_RES == EncoderRes.ENC_RES_1MU:
         node.sdo["Profile jerk"][1].raw = int(1_000_000 * INC_PER_MM)  # Profile Jerk (inc/s³)        | 1_000_000 mm/s³
-    elif ENC_RES == EncoderRes.ENC_RES_2500NAN:
+    elif ENC_RES == EncoderRes.ENC_RES_250NAN:
         node.sdo["Profile jerk"][1].raw = int(0xFFFFFFFF)              # Profile Jerk (inc/s³)
     elif ENC_RES == EncoderRes.ENC_RES_100NAN:
         node.sdo["Profile jerk"][1].raw = int(0xFFFFFFFF)              # Profile Jerk (inc/s³)

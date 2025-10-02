@@ -5,7 +5,7 @@ This repository provides examples for working with CiA 402-compliant devices fro
 ## Table of Contents
 
 * [Wiring](#wiring)
-* [Installation](#installation)
+* [Installation](#software-installation)
 * [Quick Start](#quick-start)
 * [Documentation](#documentation)
 * [Project Structure](#project-structure)
@@ -40,6 +40,7 @@ We use the **Fysetc UCAN** USB-to-CAN adapter. However, you are free to use any 
 
 ### 1. Requirements
 
+- **Windows** or **Linux**.
 - **[Python 3.12 or higher](https://www.python.org/downloads/)** must be installed before continuing.  
 - **[Visual Studio Code](https://code.visualstudio.com/)** recommended as the code editor.  
 - **[Visual Studio Code Python Extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python)** optional, but helpful when working with Python files.  

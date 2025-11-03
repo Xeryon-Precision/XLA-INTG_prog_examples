@@ -26,13 +26,15 @@ We use the **Fysetc UCAN** USB-to-CAN adapter. However, you are free to use any 
 <!-- omit in toc -->
 ### 2.1. Wiring Steps
 
-1. Ensure that the device is powered off and the power plug is disconnected.
-2. Connect the FFC cable to the XLA. ([Wiring example](docs/wiring.md))
-3. Connect the FFC cable to the breakout board.
-4. Connect the STO (Safe Torque Off) pin to the 3.3V on the breakout board.
-5. Connect the power cables to the screw terminals.
-6. Verify that all connections are secure and correctly placed.
-7. Connect power and switch on the power supply.
+1. **Power Off** - Ensure the breakout PCB is not powered, and the power plug is disconnected.
+2. **Connect FFC to XLA** - Attach the FFC cable to the XLA. ([Wiring example](docs/wiring.md))
+3. **Connect FFC to Breakout Board** - Attach the other end of the FFC cable to the breakout board.
+4. **Connect STO** - Connect the STO (Safe Torque Off) pin to the **3.3 V** pin on the breakout board.
+5. **Connect CAN Bus** - Connect the **CAN_H**, **CAN_L**, and **GND** terminals of the USB-to-CAN adapter to the corresponding pins on the breakout PCB.
+6. **Connect USB** - Plug the USB-C cable between the USB-to-CAN adapter and your PC.
+7. **Connect Power Cables** - Attach the power cables to the screw terminals.
+8. **Verify Connections** - Double-check that all connections are secure and correctly placed.
+9. **Power On** - Connect the power plug and switch on the power supply.
 
 > **Note:** No LEDs will be on when the device is powered
 
@@ -43,6 +45,7 @@ We use the **Fysetc UCAN** USB-to-CAN adapter. However, you are free to use any 
 <!-- omit in toc -->
 ### 3.1. Requirements
 
+- **Windows** or **Linux**.
 - **[Python 3.12 or higher](https://www.python.org/downloads/)** must be installed before continuing.  
 - **[Visual Studio Code](https://code.visualstudio.com/)** recommended as the code editor.  
 - **[Visual Studio Code Python Extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python)** optional, but helpful when working with Python files.  
@@ -50,7 +53,7 @@ We use the **Fysetc UCAN** USB-to-CAN adapter. However, you are free to use any 
 <!-- omit in toc -->
 ### 3.2. Install dependencies
 
-You can install the requirements by running this command in the CMD.
+You can install the required dependencies by running the following command.
 
 ```bash
 pip install -r requirements.txt
@@ -59,7 +62,7 @@ pip install -r requirements.txt
 <!-- omit in toc -->
 ### 3.3. Open the examples directory
 
-Make sure that you are are in the directory `examples`
+Make sure you are in the `examples` directory before running the following commands:
 
 ```bash
 cd examples
@@ -68,7 +71,7 @@ cd examples
 <!-- omit in toc -->
 ### 3.4. Interface Compatibility
 
-Ensure your hardware (e.g., USB-to-CAN) is connected and supported by your system:
+Ensure your hardware (e.g., USB-to-CAN adapter) is connected and supported by your system:
 
 * For Linux `socketcan`: ensure kernel CAN drivers are loaded
 

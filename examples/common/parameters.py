@@ -2,9 +2,10 @@
 parameters.py
 
 © 2025 Xeryon – All rights reserved.
+For demonstration purposes only. See README for disclaimer.
 """
 
-from enum import IntEnum, IntFlag, unique, StrEnum
+from enum import IntEnum, IntFlag, unique, StrEnum, Enum
 
 from canopen.profiles.p402 import OperationMode
 
@@ -13,11 +14,12 @@ from canopen.profiles.p402 import OperationMode
 # Encoder resolution
 # -----------------------------------------------------------------------------
 @unique
-class EncoderRes(IntEnum):
-    ENC_RES_10MU = 100      # XLA-5-X-1MU-INTG      (10 µm resolution)
-    ENC_RES_1MU = 1000      # XLA-5-X-1MU-INTG      (1 µm resolution)
-    ENC_RES_250NAN = 4000   # XLA-5-X-1MU-INTG      (250 nm resolution)
-    ENC_RES_100NAN = 10000  # XLA-5-X-100NAN-INTG   (100 nm resolution)
+class EncoderRes(Enum):
+    # Effective increments per millimetre (inc/mm)
+    ENC_RES_10MU    = (1_000_000.0 / 9407.4)  # XLA-5-X-1MU-INTG      (10  µm resolution)
+    ENC_RES_1MU     = (1_000_000.0 / 1007.9)  # XLA-5-X-1MU-INTG      (1   µm resolution)
+    ENC_RES_250NAN  = (1_000_000.0 / 249.8)   # XLA-5-X-1MU-INTG      (250 nm resolution)
+    ENC_RES_100NAN  = (1_000_000.0 / 100.8)   # XLA-5-X-100NAN-INTG   (100 nm resolution)
 
 
 # -----------------------------------------------------------------------------
@@ -70,7 +72,7 @@ class NodeState(StrEnum):
 @unique
 class NodeOperationMode(IntEnum):
     HOMING = OperationMode.HOMING
-    TRAJECTORY = OperationMode.PROFILED_POSITION
+    PROFILE_POSITION = OperationMode.PROFILED_POSITION
     OFF = OperationMode.NO_MODE
     HYBRID = -1
     OPEN_LOOP = OperationMode.OPEN_LOOP_VECTOR_MODE

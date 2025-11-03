@@ -9,6 +9,7 @@ For more information, please read the README:
 - homing.md
 
 © 2025 Xeryon – All rights reserved.
+For demonstration purposes only. See README for disclaimer.
 """
 
 import logging

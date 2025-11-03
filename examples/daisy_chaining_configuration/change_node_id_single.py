@@ -24,6 +24,7 @@ Exit Codes:
     130 Interrupted by user
     
 © 2025 Xeryon – All rights reserved.
+For demonstration purposes only. See README for disclaimer.
 """
 
 import os

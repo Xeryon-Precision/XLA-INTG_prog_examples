@@ -12,6 +12,7 @@ For more information, please read the README:
 - mode_profile_position.md
 
 © 2025 Xeryon – All rights reserved.
+For demonstration purposes only. See README for disclaimer.
 """
 
 import logging
@@ -54,8 +55,8 @@ def position_loop(node: BaseNode402) -> None:
     # Set CiA 402 State machine to SWITCHED ON
     set_node_state(node, NodeState.SWITCH_ON)
 
-    # Set mode to Profile Position Mode (Trajectory)
-    set_node_operation_mode(node, NodeOperationMode.TRAJECTORY)
+    # Set mode to Profile Position Mode
+    set_node_operation_mode(node, NodeOperationMode.PROFILE_POSITION)
 
     # Set the position window parameters
     node.sdo["Position window"].raw = 10
@@ -64,9 +65,9 @@ def position_loop(node: BaseNode402) -> None:
     # Set CiA 402 State machine to OPERATION ENABLED
     set_node_state(node, NodeState.OPERATION_ENABLED)
 
-    pos_1 = -10 * INC_PER_MM
-    pos_2 = 10 * INC_PER_MM
-    step = 5 * INC_PER_MM
+    pos_1 = int(-10 * INC_PER_MM)
+    pos_2 = int(10 * INC_PER_MM)
+    step = int(5 * INC_PER_MM)
 
     positions = list(range(pos_1, pos_2, step)) + list(range(pos_2, pos_1, -step))
     step_delay = 0.5
@@ -75,7 +76,7 @@ def position_loop(node: BaseNode402) -> None:
     for i in range(5):
         try:
             for target_pos in positions:
-                send_position_command(node, target_pos)
+                send_position_command(node, int(target_pos))
                 time.sleep(step_delay)
         except Exception as e:
             log.warning(f"Node {node.id}: Communication failure: {e}")
@@ -111,8 +112,8 @@ def send_position_command(node: BaseNode402, target_pos: int) -> None:
     cw = 0x0F
     set_controlword(node, controlword=cw)
 
-    log.info(f"Node {node.id}: Sending target position {target_pos}")
-    set_target_position(node, target_position=target_pos)
+    log.info(f"Node {node.id}: Sending target position {target_pos} ({target_pos / INC_PER_MM:.3f} mm)")
+    set_target_position(node, target_position=int(target_pos))
 
     # Set bit 4 to signal new set-point
     log.info(f"Node {node.id}: Setting new set-point to to initiate motion")
@@ -131,7 +132,7 @@ def send_position_command(node: BaseNode402, target_pos: int) -> None:
 
     # Read the actual position after target is reached
     current_pos = get_actual_position(node)
-    log.info(f"Node {node.id}: Reached position {current_pos}")
+    log.info(f"Node {node.id}: Reached position {current_pos} ({target_pos / INC_PER_MM:.3f} mm)")
 
 
 def main() -> None:

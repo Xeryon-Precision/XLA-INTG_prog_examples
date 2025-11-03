@@ -16,6 +16,7 @@ This script is primarily intended for quick connectivity checks or diagnostic
 purposes during development, production testing, or troubleshooting.
 
 © 2025 Xeryon – All rights reserved.
+For demonstration purposes only. See README for disclaimer.
 """
 import os
 import sys

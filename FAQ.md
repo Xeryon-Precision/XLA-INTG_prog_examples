@@ -119,4 +119,4 @@ If your question is not answered here, please:
 
 * Review the guides in the `docs` folder.
 * Check the [README.md](README.md) for setup and installation details.
-* Contact Xeryon support for further assistance.
+* If you need further assistance please contact our support team: [support@xeryon.com](mailto:support@xeryon.com)

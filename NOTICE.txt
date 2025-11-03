@@ -1,0 +1,24 @@
+XERYON SOFTWARE NOTICE
+----------------------
+
+© 2025 Xeryon NV. All rights reserved.
+
+This package contains example and demonstration software intended to illustrate
+the use of Xeryon motion control products. The software, scripts, and
+accompanying documentation are provided for informational and educational
+purposes only.
+
+While efforts have been made to ensure accuracy, Xeryon makes no warranties,
+express or implied, regarding the software or documentation, including but not
+limited to any warranties of merchantability, fitness for a particular purpose,
+or noninfringement. The software is provided "as is" and may be modified or
+improved at any time without notice.
+
+In no event shall Xeryon or its employees be liable for any claim, damages, or
+other liability, whether in an action of contract, tort, or otherwise, arising
+from or in connection with the software, documentation, or the use thereof.
+
+Use of this software is entirely at your own risk.
+
+For the latest documentation and product information, please visit:
+https://www.xeryon.com/

@@ -14,6 +14,7 @@ For more information, please read the README:
 - configuration.md
 
 © 2025 Xeryon – All rights reserved.
+For demonstration purposes only. See README for disclaimer.
 """
 
 import logging
@@ -53,7 +54,7 @@ def reset_and_setup_logging(node: BaseNode402) -> None:
     node.sdo["Status logging verbosity flags"].raw = DEFAULT_STATUS_LOGGING
 
     # Switch to mode profile position
-    node.sdo["Mode of operation"].raw = NodeOperationMode.TRAJECTORY
+    node.sdo["Mode of operation"].raw = NodeOperationMode.PROFILE_POSITION
 
 
 def configure_io(node: BaseNode402) -> None:
@@ -162,12 +163,7 @@ def configure_motion_parameters(node: BaseNode402) -> None:
     node.sdo["Max acceleration"].raw = int(3000 * INC_PER_MM)          # Max acceleration (inc/s²)    | 3000 mm/s²
 
 
-    # Trajectory profile jerk
-    if ENC_RES == EncoderRes.ENC_RES_1MU:
-        node.sdo["Profile jerk"][1].raw = int(1_000_000 * INC_PER_MM)  # Profile Jerk (inc/s³)        | 1_000_000 mm/s³
-    elif ENC_RES == EncoderRes.ENC_RES_250NAN:
-        node.sdo["Profile jerk"][1].raw = int(0xFFFFFFFF)              # Profile Jerk (inc/s³)
-    elif ENC_RES == EncoderRes.ENC_RES_100NAN:
+    if ENC_RES == EncoderRes.ENC_RES_250NAN or ENC_RES == EncoderRes.ENC_RES_100NAN:
         node.sdo["Profile jerk"][1].raw = int(0xFFFFFFFF)              # Profile Jerk (inc/s³)
     else:
         node.sdo["Profile jerk"][1].raw = int(1_000_000 * INC_PER_MM)  # Profile Jerk (inc/s³)        | 1_000_000 mm/s³

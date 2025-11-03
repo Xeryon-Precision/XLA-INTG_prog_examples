@@ -2,16 +2,19 @@
 
 This repository provides examples for working with CiA 402-compliant devices from Xeryon over CANopen. The repository includes installation instructions, communication setup, and Python programming examples for motion control.
 
-## Table of Contents
+## 1. Table of Contents
 
-* [Wiring](#wiring)
-* [Installation](#installation)
-* [Quick Start](#quick-start)
-* [Documentation](#documentation)
-* [Project Structure](#project-structure)
-* [FAQ](#faq)
+- [1. Table of Contents](#1-table-of-contents)
+- [2. Wiring](#2-wiring)
+- [3. Software Installation](#3-software-installation)
+- [4. Quick Start](#4-quick-start)
+- [5. Documentation](#5-documentation)
+- [6. Project Structure](#6-project-structure)
+- [7. FAQ \& Support](#7-faq--support)
+- [8. Disclaimer](#8-disclaimer)
 
-## Wiring
+
+## 2. Wiring
 
 > ⚠️ **Safety Warning:**
 > Always disconnect power before wiring. Incorrect wiring while powered can damage the device.
@@ -20,7 +23,8 @@ Before proceeding, please refer to the wiring diagram for the correct setup. The
 
 We use the **Fysetc UCAN** USB-to-CAN adapter. However, you are free to use any compatible USB-to-CAN device. 
 
-### Wiring Steps
+<!-- omit in toc -->
+### 2.1. Wiring Steps
 
 1. Ensure that the device is powered off and the power plug is disconnected.
 2. Connect the FFC cable to the XLA. ([Wiring example](docs/wiring.md))
@@ -34,17 +38,17 @@ We use the **Fysetc UCAN** USB-to-CAN adapter. However, you are free to use any 
 
 <img src="img/XLA-INTG-CTRL_wiring_diagram.jpg" alt="Wiring Diagram" style="border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2);" />
 
-## Software Installation
+## 3. Software Installation
 
-### 1. Requirements
+<!-- omit in toc -->
+### 3.1. Requirements
 
 - **[Python 3.12 or higher](https://www.python.org/downloads/)** must be installed before continuing.  
 - **[Visual Studio Code](https://code.visualstudio.com/)** recommended as the code editor.  
 - **[Visual Studio Code Python Extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python)** optional, but helpful when working with Python files.  
 
-
-
-### 2. Install dependencies
+<!-- omit in toc -->
+### 3.2. Install dependencies
 
 You can install the requirements by running this command in the CMD.
 
@@ -52,7 +56,8 @@ You can install the requirements by running this command in the CMD.
 pip install -r requirements.txt
 ```
 
-### 3. Open the examples directory
+<!-- omit in toc -->
+### 3.3. Open the examples directory
 
 Make sure that you are are in the directory `examples`
 
@@ -60,13 +65,15 @@ Make sure that you are are in the directory `examples`
 cd examples
 ```
 
-### 4. Interface Compatibility
+<!-- omit in toc -->
+### 3.4. Interface Compatibility
 
 Ensure your hardware (e.g., USB-to-CAN) is connected and supported by your system:
 
 * For Linux `socketcan`: ensure kernel CAN drivers are loaded
 
-### 5. Change `settings.py`
+<!-- omit in toc -->
+### 3.5. Change `settings.py`
 
 To configure the CAN interface and channel for your platform, open `settings.py` and update the following values:
 
@@ -90,7 +97,7 @@ CAN_BITRATE = CANBitrate.BITRATE_125k
 EDS_PATH = "../eds/xeryon_xla_5_eds.eds"
 ```
 
-## Quick Start
+## 4. Quick Start
 
 Ensure you have updated `settings.py` with your CAN interface details first. <br>
 To quickly verify the communication of your setup, run:
@@ -114,22 +121,22 @@ You can also run other examples:
 python <filename>.py
 ```
 
-## Documentation
+## 5. Documentation
 
 These are detailed guides on how to configure, home, and perform motion with the motor:
 
-| Guide Type                                             | Description                             |
-| ------------------------------------------------------ | --------------------------------------- |
-| [Configuration](docs/configuration.md)                 | How to set parameters and save them     |
-| [Homing](docs/homing.md)                               | How to execute a homing operation       |
-| [Profile Position mode](docs/mode_profile_position.md) | How to use profile position mode        |
-| [Daisy Chaining](docs/daisy_chaining.md)               | How to use daisy chaining               |
-| [Wiring example](docs/wiring.md)                       | Wiring example                          |
-| [CANopen documentation](https://xeryon.com/wp-content/uploads/2025/08/CANopen-Introduction.pdf)                         | CANopen introduction manual      |
-| [EDS](docs/eds.md)                                     | EDS file information                    |
-| [FAQ](FAQ.md)                                          | Frequently asked questions              |
+| Guide Type                                                                                      | Description                         |
+| ----------------------------------------------------------------------------------------------- | ----------------------------------- |
+| [CANopen documentation](https://xeryon.com/wp-content/uploads/2025/08/CANopen-Introduction.pdf) | CANopen introduction manual         |
+| [Configuration](docs/configuration.md)                                                          | How to set parameters and save them |
+| [Homing](docs/homing.md)                                                                        | How to execute a homing operation   |
+| [Profile Position mode](docs/mode_profile_position.md)                                          | How to use profile position mode    |
+| [Daisy Chaining](docs/daisy_chaining.md)                                                        | How to use daisy chaining           |
+| [Wiring example](docs/wiring.md)                                                                | Wiring example                      |
+| [EDS](docs/eds.md)                                                                              | EDS file information                |
+| [FAQ](FAQ.md)                                                                                   | Frequently asked questions          |
 
-## Project Structure
+## 6. Project Structure
 
 ```
 .
@@ -166,8 +173,18 @@ These are detailed guides on how to configure, home, and perform motion with the
 └── requirements.txt                  # Dependency file for python setup
 ```
 
-## FAQ
+## 7. FAQ & Support
 
-Please refer to [FAQ](FAQ.md) for a complete list of common questions and answers.
+Please refer to the [FAQ](FAQ.md) for a complete list of common questions and answers.
 
+If you need further assistance with this software or any Xeryon product, please contact our support team: 
+[support@xeryon.com](mailto:support@xeryon.com)
 
+## 8. Disclaimer
+
+The software and accompanying documentation are provided "as is" and without
+warranty of any kind, express or implied, including but not limited to the
+warranties of merchantability, fitness for a particular purpose, and
+noninfringement. In no event shall Xeryon be liable for any claim, damages, or
+other liability, whether in an action of contract, tort, or otherwise, arising
+from, out of, or in connection with the software or its use.

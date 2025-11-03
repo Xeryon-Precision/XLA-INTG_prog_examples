@@ -5,6 +5,7 @@ This module provides reusable helper functions for working with CiA 402-complian
 CANopen devices.
 
 © 2025 Xeryon – All rights reserved.
+For demonstration purposes only. See README for disclaimer.
 """
 
 import logging as log

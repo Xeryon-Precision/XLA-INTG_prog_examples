@@ -7,6 +7,7 @@ Includes interface settings, default parameters, bitrates, control modes, and
 protocol constants for use across all example implementations.
 
 © 2025 Xeryon – All rights reserved.
+For demonstration purposes only. See README for disclaimer.
 """
 
 from common.parameters import EncoderRes, CANBitrate
@@ -63,5 +64,5 @@ DEFAULT_TIMEOUT = 15.0         # seconds
 # -----------------------------------------------------------------------------
 # Conversion factors
 # -----------------------------------------------------------------------------
-INC_PER_MM = int(ENC_RES)
-MM_PER_INC = 1.0 / INC_PER_MM
+INC_PER_MM = float(ENC_RES.value)
+MM_PER_INC = 1.0 / float(INC_PER_MM)

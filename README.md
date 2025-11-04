@@ -1,3 +1,10 @@
+> [!NOTE]
+> **Compatibility Notice**  
+> The examples and code in this branch are compatible **only** with the following versions:  
+> `bc18a32`  
+> `464399b`
+
+
 # Xeryon CANopen Example
 
 This repository provides examples for working with CiA 402-compliant devices from Xeryon over CANopen. The repository includes installation instructions, communication setup, and Python programming examples for motion control.

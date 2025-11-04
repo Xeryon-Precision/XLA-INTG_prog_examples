@@ -246,13 +246,13 @@ def wait_for_statusword_flags(
         f"{'set' if expected_flag_state else 'cleared'} in statusword."
     )
 
-
 # -----------------------------------------------------------------------------
 # PDOs
 # Control Word (0x6040)
 # Status Word (0x6041)
 # Target Position (0x607A)
 # Position Actual Value (0x6064)
+# Profile velocity (0x607F)
 # -----------------------------------------------------------------------------
 def set_controlword(node: BaseNode402, controlword: int = None) -> None:
     """
@@ -267,8 +267,8 @@ def set_controlword(node: BaseNode402, controlword: int = None) -> None:
         None
     """
     if controlword is not None:
-        node.rpdo[3]["Controlword"].raw = controlword
-        node.rpdo[3].transmit()
+        node.rpdo[1]["Controlword"].raw = controlword
+        node.rpdo[1].transmit()
 
 
 def get_controlword(node: BaseNode402) -> int:
@@ -281,7 +281,7 @@ def get_controlword(node: BaseNode402) -> int:
     Returns:
         int: The raw control word value (0x6040).
     """
-    return node.rpdo[3]["Controlword"].raw
+    return node.rpdo[1]["Controlword"].raw
 
 
 def get_statusword(node: BaseNode402) -> int:
@@ -294,7 +294,7 @@ def get_statusword(node: BaseNode402) -> int:
     Returns:
         int: The raw status word value (0x6041).
     """
-    return node.tpdo[3]["Statusword"].raw
+    return node.tpdo[1]["Statusword"].raw
 
 
 def get_actual_position(node: BaseNode402) -> int:
@@ -310,7 +310,7 @@ def get_actual_position(node: BaseNode402) -> int:
     return node.tpdo[3]["Position Actual Value"].raw
 
 
-def set_target_position(node: BaseNode402, target_position: int = None) -> None:
+def set_target_position(node: BaseNode402, target_position: int = None, profile_velocity: int = None) -> None:
     """
     Writes a new target position to the device and transmits the RPDO.
 
@@ -324,6 +324,11 @@ def set_target_position(node: BaseNode402, target_position: int = None) -> None:
     """
     if target_position is not None:
         node.rpdo[3]["Target Position"].raw = target_position
+        
+    if profile_velocity is not None:
+        node.rpdo[3]["Profile velocity"].raw = profile_velocity
+    
+    if target_position is not None or profile_velocity is not None:
         node.rpdo[3].transmit()
 
 

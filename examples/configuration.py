@@ -134,7 +134,7 @@ def configure_frequency(node: BaseNode402):
 
 def configure_motion_parameters(node: BaseNode402) -> None:
     """
-    Configures motor phase, duty cycle, and trajectory profile parameters.
+    Configures motor phase, duty cycle, and profile position mode parameters.
 
     Args:
         node (BaseNode402): The CANopen device node to configure.

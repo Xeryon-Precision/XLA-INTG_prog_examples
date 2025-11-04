@@ -10,7 +10,7 @@ This includes:
 * Configuring I/O and LED mappings
 * Setting control mode
 * Setting frequency bounds
-* Setting trajectory parameters
+* Setting profile position parameters
 * Setting homing parameters
 * Saving changes to flash
 
@@ -29,7 +29,7 @@ network.add_node(node)
 ```python
 node.sdo["Restore Default Parameters"][1].raw = RESTORE_ALL_DEFAULT_PARAMETERS
 node.sdo["Status logging verbosity flags"].raw = DEFAULT_STATUS_LOGGING
-node.sdo["Mode of operation"].raw = ControlMode.TRAJECTORY
+node.sdo["Mode of operation"].raw = ControlMode.PROFILE_POSITION
 ```
 
 ### 3. Configure Digital and Analog I/O

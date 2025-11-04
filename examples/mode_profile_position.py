@@ -68,6 +68,8 @@ def position_loop(node: BaseNode402) -> None:
     pos_1 = int(-10 * INC_PER_MM)
     pos_2 = int(10 * INC_PER_MM)
     step = int(5 * INC_PER_MM)
+    
+    velocity = 200 * INC_PER_MM
 
     positions = list(range(pos_1, pos_2, step)) + list(range(pos_2, pos_1, -step))
     step_delay = 0.5
@@ -76,7 +78,7 @@ def position_loop(node: BaseNode402) -> None:
     for i in range(5):
         try:
             for target_pos in positions:
-                send_position_command(node, int(target_pos))
+                send_position_command(node, int(target_pos), int(velocity))
                 time.sleep(step_delay)
         except Exception as e:
             log.warning(f"Node {node.id}: Communication failure: {e}")
@@ -98,13 +100,14 @@ def position_loop(node: BaseNode402) -> None:
     log.info(f"Node {node.id}: Position loop completed")
 
 
-def send_position_command(node: BaseNode402, target_pos: int) -> None:
+def send_position_command(node: BaseNode402, target_pos: int, profile_velocity: int) -> None:
     """
     Sends a single position command and waits for movement to complete.
 
     Args:
         node (BaseNode402): The CANopen device node.
         target_pos (int): Target position in internal units.
+        profile_velocity (int): Profile velocity in internal units.
 
     Returns:
         None
@@ -113,7 +116,7 @@ def send_position_command(node: BaseNode402, target_pos: int) -> None:
     set_controlword(node, controlword=cw)
 
     log.info(f"Node {node.id}: Sending target position {target_pos} ({target_pos / INC_PER_MM:.3f} mm)")
-    set_target_position(node, target_position=int(target_pos))
+    set_target_position(node, target_position=int(target_pos), profile_velocity=int(profile_velocity))
 
     # Set bit 4 to signal new set-point
     log.info(f"Node {node.id}: Setting new set-point to to initiate motion")

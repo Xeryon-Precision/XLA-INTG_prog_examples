@@ -2,36 +2,36 @@
 ; port GmbH Halle/Saale Germany, http://www.port.de, mailto: service@port.de
 
 [FileInfo]
-FileName=xeryon_xla_5_eds.eds
+FileName=p402_s2.eds
 FileVersion=1
 FileRevision=0
 EDSVersion=4.0
-Description=Xeryon XLA-5 INTG Linear Piezo Actuator
-CreationTime=15:29PM
-CreationDate=05-23-2025
-CreatedBy=0
-ModificationTime=15:29PM
-ModificationDate=05-23-2025
-ModifiedBy=0
+Description=Xeryon XLA-5 Linear Piezo Motor
+CreationTime=13:18PM
+CreationDate=06-24-2025
+CreatedBy=4697
+ModificationTime=13:18PM
+ModificationDate=06-24-2025
+ModifiedBy=4697
 
 [DeviceInfo]
 VendorName=Xeryon NV
 VendorNumber=0x5A4
-ProductName=XLA-5-INTG
+ProductName=XLA-5-75-1MU-INTG
 ProductNumber=0xC1088B3
 RevisionNumber=0x1
 OrderCode=0
 BaudRate_10=1
 BaudRate_20=1
-BaudRate_50=1
+BaudRate_50=0
 BaudRate_125=1
 BaudRate_250=1
 BaudRate_500=1
-BaudRate_800=1
+BaudRate_800=0
 BaudRate_1000=1
 DynamicChannelsSupported=0
 GroupMessaging=0
-LSS_Supported=0
+LSS_Supported=1
 Granularity=0
 SimpleBootUpSlave=1
 SimpleBootUpMaster=0
@@ -57,7 +57,7 @@ SupportedObjects=3
 3=0x1018
 
 [OptionalObjects]
-SupportedObjects=46
+SupportedObjects=48
 1=0x1002
 2=0x1005
 3=0x1010
@@ -91,22 +91,24 @@ SupportedObjects=46
 31=0x607A
 32=0x607C
 33=0x607D
-34=0x607F
-35=0x6081
-36=0x6083
-37=0x6085
-38=0x6098
-39=0x6099
-40=0x609A
-41=0x60A4
-42=0x60C5
-43=0x60E3
-44=0x60F4
-45=0x60FC
-46=0x6502
+34=0x607E
+35=0x607F
+36=0x6081
+37=0x6083
+38=0x6085
+39=0x6098
+40=0x6099
+41=0x609A
+42=0x60A4
+43=0x60C5
+44=0x60E3
+45=0x60F2
+46=0x60F4
+47=0x60FC
+48=0x6502
 
 [ManufacturerObjects]
-SupportedObjects=18
+SupportedObjects=35
 1=0x2000
 2=0x2002
 3=0x2004
@@ -114,17 +116,34 @@ SupportedObjects=18
 5=0x2011
 6=0x2012
 7=0x2013
-8=0x2014
-9=0x2015
-10=0x3000
-11=0x3001
-12=0x4000
-13=0x4001
-14=0x5000
-15=0x5001
-16=0x5002
-17=0x5003
-18=0x5004
+8=0x2015
+9=0x2016
+10=0x2017
+11=0x2018
+12=0x3000
+13=0x3001
+14=0x4000
+15=0x4001
+16=0x5000
+17=0x5001
+18=0x5002
+19=0x5003
+20=0x5004
+21=0x5005
+22=0x5006
+23=0x5007
+24=0x5008
+25=0x5009
+26=0x500A
+27=0x5010
+28=0x5011
+29=0x5020
+30=0x5021
+31=0x5022
+32=0x5023
+33=0x5030
+34=0x5031
+35=0x5032
 
 [1000]
 ParameterName=Device Type
@@ -399,7 +418,7 @@ ParameterName=Mapping Entry 1
 ObjectType=0x07
 DataType=0x0007
 AccessType=const
-DefaultValue=0x60400010
+DefaultValue=0x607A0020
 PDOMapping=0
 
 [1602sub2]
@@ -407,7 +426,7 @@ ParameterName=Mapping Entry 2
 ObjectType=0x07
 DataType=0x0007
 AccessType=const
-DefaultValue=0x607A0020
+DefaultValue=0x60810020
 PDOMapping=0
 
 [1800]
@@ -460,7 +479,7 @@ ParameterName=Event Timer
 ObjectType=0x07
 DataType=0x0006
 AccessType=rw
-DefaultValue=0x0000
+DefaultValue=0x0005
 PDOMapping=0
 
 [1802]
@@ -513,7 +532,7 @@ ParameterName=Event Timer
 ObjectType=0x07
 DataType=0x0006
 AccessType=rw
-DefaultValue=0x0000
+DefaultValue=0x0001
 PDOMapping=0
 
 [1A00]
@@ -538,7 +557,7 @@ DefaultValue=0x60410010
 PDOMapping=0
 
 [1A02]
-SubNumber=3
+SubNumber=2
 ParameterName=Transmit PDO Mapping Parameter 3
 ObjectType=0x09
 
@@ -547,19 +566,11 @@ ParameterName=Number of mapped objects
 ObjectType=0x07
 DataType=0x0005
 AccessType=const
-DefaultValue=0x02
+DefaultValue=0x01
 PDOMapping=0
 
 [1A02sub1]
 ParameterName=Mapping Entry 1
-ObjectType=0x07
-DataType=0x0007
-AccessType=const
-DefaultValue=0x60410010
-PDOMapping=0
-
-[1A02sub2]
-ParameterName=Mapping Entry 2
 ObjectType=0x07
 DataType=0x0007
 AccessType=const
@@ -738,7 +749,15 @@ AccessType=rw
 DefaultValue=0x00000064
 PDOMapping=0
 
-[2014]
+[2015]
+ParameterName=Halt Velocity Timeout
+ObjectType=0x07
+DataType=0x0006
+AccessType=rw
+DefaultValue=0x0001
+PDOMapping=0
+
+[2016]
 ParameterName=Halt Velocity Window
 ObjectType=0x07
 DataType=0x0006
@@ -746,12 +765,20 @@ AccessType=rw
 DefaultValue=0x0001
 PDOMapping=0
 
-[2015]
-ParameterName=Halt Velocity Timeout
+[2017]
+ParameterName=Target Tolerance Narrow
 ObjectType=0x07
-DataType=0x0006
+DataType=0x0007
 AccessType=rw
-DefaultValue=0x0001
+DefaultValue=0x00000002
+PDOMapping=0
+
+[2018]
+ParameterName=Target Tolerance Wide
+ObjectType=0x07
+DataType=0x0007
+AccessType=rw
+DefaultValue=0x00000005
 PDOMapping=0
 
 [3000]
@@ -941,7 +968,7 @@ DefaultValue=0x00000000
 PDOMapping=0
 
 [5003]
-SubNumber=6
+SubNumber=7
 ParameterName=Trace Buffer
 ObjectType=0x09
 
@@ -950,7 +977,7 @@ ParameterName=Highest sub-index supported
 ObjectType=0x07
 DataType=0x0005
 AccessType=const
-DefaultValue=0x05
+DefaultValue=0x06
 PDOMapping=0
 
 [5003sub1]
@@ -981,7 +1008,7 @@ PDOMapping=0
 ParameterName=Write pointer
 ObjectType=0x07
 DataType=0x0007
-AccessType=ro
+AccessType=rw
 DefaultValue=0x00000000
 PDOMapping=0
 
@@ -993,11 +1020,139 @@ AccessType=rw
 DefaultValue=0x00000000
 PDOMapping=0
 
+[5003sub6]
+ParameterName=Features
+ObjectType=0x07
+DataType=0x0007
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+
 [5004]
 ParameterName=Firmware ID
 ObjectType=0x07
 DataType=0x0009
 AccessType=ro
+PDOMapping=0
+
+[5005]
+ParameterName=System Status Flags
+ObjectType=0x07
+DataType=0x0007
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+
+[5006]
+ParameterName=ADC VIN Voltage
+ObjectType=0x07
+DataType=0x0008
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+
+[5007]
+ParameterName=ADC VPZT Voltage
+ObjectType=0x07
+DataType=0x0008
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+
+[5008]
+ParameterName=ADC VDAC Voltage
+ObjectType=0x07
+DataType=0x0008
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+
+[5009]
+ParameterName=ADC VDR Voltage
+ObjectType=0x07
+DataType=0x0008
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+
+[500A]
+ParameterName=ADC Temperature Input
+ObjectType=0x07
+DataType=0x0008
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+
+[5010]
+ParameterName=IOSTATE Speed
+ObjectType=0x07
+DataType=0x0008
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+
+[5011]
+ParameterName=IOSTATE Pins
+ObjectType=0x07
+DataType=0x0007
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+
+[5020]
+ParameterName=PMUSTATE Pins
+ObjectType=0x07
+DataType=0x0007
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+
+[5021]
+ParameterName=PMUSTATE VDR
+ObjectType=0x07
+DataType=0x0007
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+
+[5022]
+ParameterName=PMUSTATE VPZT
+ObjectType=0x07
+DataType=0x0007
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+
+[5023]
+ParameterName=PMUSTATE VIN
+ObjectType=0x07
+DataType=0x0007
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+
+[5030]
+ParameterName=PWMOUT period
+ObjectType=0x07
+DataType=0x0008
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+
+[5031]
+ParameterName=PWMOUT phase
+ObjectType=0x07
+DataType=0x0008
+AccessType=ro
+DefaultValue=0x00000000
+PDOMapping=0
+
+[5032]
+ParameterName=PWMOUT dcycle
+ObjectType=0x07
+DataType=0x0008
+AccessType=ro
+DefaultValue=0x00000000
 PDOMapping=0
 
 [6040]
@@ -1168,6 +1323,14 @@ AccessType=rw
 DefaultValue=0x00000000
 PDOMapping=0
 
+[607E]
+ParameterName=Polarity
+ObjectType=0x07
+DataType=0x0005
+AccessType=rw
+DefaultValue=0x00
+PDOMapping=0
+
 [607F]
 ParameterName=Max profile velocity
 ObjectType=0x07
@@ -1180,9 +1343,9 @@ PDOMapping=0
 ParameterName=Profile velocity
 ObjectType=0x07
 DataType=0x0007
-AccessType=rw
+AccessType=rww
 DefaultValue=0x00030D40
-PDOMapping=0
+PDOMapping=1
 
 [6083]
 ParameterName=Profile acceleration
@@ -1309,6 +1472,14 @@ ObjectType=0x07
 DataType=0x0002
 AccessType=ro
 DefaultValue=0x25
+PDOMapping=0
+
+[60F2]
+ParameterName=Positioning option code
+ObjectType=0x07
+DataType=0x0006
+AccessType=rw
+DefaultValue=0x0000
 PDOMapping=0
 
 [60F4]
